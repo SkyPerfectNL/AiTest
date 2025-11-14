@@ -1,6 +1,6 @@
 import type React from "react";
-import { useSidebar } from "../../contexts/useSidebarT";
-import { MenuButton } from "../MenuButton/MenuButton";
+import { useSidebar } from "../../contexts/";
+import { MenuButton } from "../";
 
 import "./Header.scss";
 

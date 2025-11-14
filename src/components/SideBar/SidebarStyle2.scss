@@ -82,19 +82,44 @@
   }
 }
 
-.animate {
+.animateOpen {
   @for $i from 1 through 10 {
     > *:nth-child(#{$i}) {
       // animation: appearLi 1s ease-in-out 0.05s * $i ;
-      animation: appearLi 0.5s + 0.1s * $i  ;
+      animation: openLi 0.5s + 0.1s * $i  ;
+    }
+  }
+}
+.animateClose {
+  @for $i from 1 through 10 {
+    > *:nth-child(#{$i}) {
+      // animation: appearLi 1s ease-in-out 0.05s * $i ;
+      animation: closeLi 0.5s + 0.1s * $i  ;
     }
   }
 }
 
-@keyframes appearLi {
+@keyframes openLi {
   0% {
     // -50px для коротких объектов (иконок), -30% для длинных объектов (кнопки в боковой панели)
-    transform: translateX(min(-50px, -30%));
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+@keyframes closeLi {
+  0% {
+    // -50px для коротких объектов (иконок), -30% для длинных объектов (кнопки в боковой панели)
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  20% {
     opacity: 0;
   }
   100% {

@@ -1,10 +1,7 @@
 import type React from "react";
 import { Outlet } from "react-router-dom";
-import { Header } from "../Header/Header";
-import { Pipeline } from "../Pipeline/Pipeline";
-import { Sidebar } from "../SideBar/Sidebar";
-import { Sidebar2 } from "../SideBar/Sidebar2";
-import { useSidebar } from "../../contexts/useSidebarT";
+import { Header, Pipeline, Sidebar2 } from "../";
+import { useSidebar } from "../../contexts";
 
 import "./Layout.scss";
 

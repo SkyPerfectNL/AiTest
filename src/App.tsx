@@ -1,12 +1,11 @@
 import { HelmetProvider } from "react-helmet-async";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { SidebarProvider } from "./contexts/SidebarProviderT";
+import { SidebarProvider } from "./contexts";
 
-import { Layout } from "./components/Layout/Layout";
-import { PAGE_ENDPOINTS } from "./constants/pageEndPoints";
-import { HomeContainer } from "./pages/HomePages/HomeContainer";
-import { IndexContainer } from "./pages/IndexPages/IndexContainer";
-import { ProjectContainer } from "./pages/ProjectPages/ProjectContainer";
+import { Layout } from "./components";
+import { PAGE_ENDPOINTS } from "./constants";
+import { HomeContainer, IndexContainer, ProjectContainer } from "./pages";
+
 import "./index.css";
 
 const router = createBrowserRouter([

@@ -1,25 +1,34 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSidebar } from "../../contexts/useSidebarT";
+import { useSidebar } from "../../contexts";
 import { useMenuItems } from "./menuItems";
 
 import "./SidebarStyle2.scss";
 
 export const Sidebar2: React.FC = () => {
   const { isOpen, closeSidebar } = useSidebar();
-  const menuItems = useMenuItems();
+  // const [loading, setLoading] = useState(true);
   const listRef = useRef<HTMLUListElement>(null);
+  const menuItems = useMenuItems();
 
   useEffect(() => {
+    // if(loading) {
+    //   return;
+    // }
+    const className = isOpen ? "animateOpen" : "animateClose"
     if (listRef.current) {
-      listRef.current.classList.add("animate");
+      listRef.current.classList.add(className);
     }
     const timer = setTimeout(() => {
       if (listRef.current) {
-        listRef.current.classList.remove("animate");
+        listRef.current.classList.remove(className);
       }
       return () => clearTimeout(timer);
-    }, 500+100*menuItems.length);
+    }, 510+100*menuItems.length);
   }, [isOpen]);
+
+  // useEffect(() => {
+  //   setLoading(false)
+  // }, [])
 
   return (
     <>
