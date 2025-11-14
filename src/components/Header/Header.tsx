@@ -5,8 +5,8 @@ import { MenuButton } from "../MenuButton/MenuButton";
 import "./Header.scss";
 
 interface HeaderProps {
-  actionText: string;
-  actionLink: string;
+  actionText?: string;
+  actionLink?: string;
 }
 
 export const Header: React.FC<HeaderProps> = ({ actionText, actionLink }) => {
@@ -37,9 +37,15 @@ export const Header: React.FC<HeaderProps> = ({ actionText, actionLink }) => {
         <a href="/" className="headerAction">
           Выйти
         </a>
-        <a href={actionLink} className="headerAction">
-          {actionText}
-        </a>
+        {actionLink && actionText ? (
+          <a href={actionLink} className="headerAction">
+            {actionText}
+          </a>
+        ) : (
+          <a href={"/home"} className="headerAction">
+            {window.location.pathname == "/" ? "Войти" : "личный кабинет"}
+          </a>
+        )}
       </div>
     </div>
   );
