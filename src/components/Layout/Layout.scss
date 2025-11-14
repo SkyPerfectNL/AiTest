@@ -24,5 +24,13 @@
         padding-left: 0;
       }
     }
+    > *:last-child {
+      display: flex;
+      flex-direction: column;
+      background-color: #ffdd6e;
+      padding: 20px;
+      height: 100vh;
+      // height: 85.6vh;
+    }
   }
 }
