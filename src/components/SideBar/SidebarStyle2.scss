@@ -1,5 +1,5 @@
-@import "/src/styles/animations.scss";
-@import "/src/styles/_variables.scss";
+@use "/src/styles/animations.scss";
+@use "/src/styles/_variables.scss" as vars;
 
 .sidebar {
   display: flex;
@@ -13,7 +13,7 @@
   transition: width 0.3s ease-in-out;
   overflow: hidden;
   z-index: 100;
-  border: 1px $secondaryColor solid;
+  border: 1px vars.$secondaryColor solid;
 
   @media (max-width: 1450px) {
     display: none;
@@ -68,8 +68,7 @@
   white-space: inherit;
   width: 90%;
   margin: 0 auto;
-  border: 2px $secondaryColor solid;
-
+  border: 2px vars.$secondaryColor solid;
 
   @for $i from 1 through 10 {
     &:nth-child(#{$i}) {
@@ -86,7 +85,7 @@
   @for $i from 1 through 10 {
     > *:nth-child(#{$i}) {
       // animation: appearLi 1s ease-in-out 0.05s * $i ;
-      animation: openLi 0.5s + 0.1s * $i  ;
+      animation: openLi 0.5s + 0.1s * $i;
     }
   }
 }
@@ -94,7 +93,7 @@
   @for $i from 1 through 10 {
     > *:nth-child(#{$i}) {
       // animation: appearLi 1s ease-in-out 0.05s * $i ;
-      animation: closeLi 0.5s + 0.1s * $i  ;
+      animation: closeLi 0.5s + 0.1s * $i;
     }
   }
 }
@@ -129,7 +128,7 @@
 }
 
 .menuLink {
-  color: $secondaryColor;
+  color: vars.$secondaryColor;
   text-decoration: none;
   display: flex;
   width: 100%;

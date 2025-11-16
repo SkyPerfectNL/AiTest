@@ -1,10 +1,9 @@
-@import "/src/styles/animations.scss";
-@import "/src/styles/_variables.scss";
+@use "/src/styles/_variables.scss" as vars;
 
 .bodyLayout {
   display: flex;
   font-weight: 500;
-  background-color: $primaryColor;
+  background-color: vars.$primaryColor;
   height: 100vh;
 
   .contentLayout {

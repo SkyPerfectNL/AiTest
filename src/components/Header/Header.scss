@@ -1,12 +1,12 @@
-@import "/src/styles/_variables.scss";
+@use "/src/styles/_variables.scss" as vars;
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  border: 2px $secondaryColor solid;
-  color: $secondaryColor;
+  border: 2px vars.$secondaryColor solid;
+  color: vars.$secondaryColor;
 }
 
 .headerMid {
@@ -49,7 +49,7 @@
   .headerAction {
     display: flex;
     padding: 10px;
-    border: 2px $secondaryColor solid;
+    border: 2px vars.$secondaryColor solid;
     color: inherit;
   }
 }
