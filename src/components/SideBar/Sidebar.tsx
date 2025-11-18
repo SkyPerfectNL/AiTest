@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSidebar } from '@contexts/'
 import { useMenuItems } from './menuItems'
-import cn from 'classnames'
 import styles from './Sidebar.module.scss'
 
 export const Sidebar: React.FC = () => {
@@ -37,12 +36,12 @@ export const Sidebar: React.FC = () => {
     <>
       {isOpen && (
         <div
-          className={cn(styles.sidebarOverlay, { [styles.active]: isOpen })}
+          className={`${styles.sidebarOverlay} ${isOpen ? styles.active : ''}`}
           onClick={closeSidebar}
         />
       )}
-      <div className={cn(styles.sidebar, { [styles.open]: isOpen })}>
-        <nav className={cn(styles.sidebarMenu, { [styles.open]: isOpen })}>
+      <div className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
+        <nav className={`${styles.sidebarMenu} ${isOpen ? styles.open : ''}`}>
           {isOpen && (
             <button
               className={styles.closeSidebarMobile}
@@ -52,34 +51,25 @@ export const Sidebar: React.FC = () => {
             </button>
           )}
           <div className={styles.logoCont}>
-            <a href="/" className={cn({ [styles.miniLogo]: !isOpen })}>
+            <a href="/" className={`${!isOpen ? styles.miniLogo : ''}`}>
               <img src="#" alt="логотип" />
             </a>
           </div>
           <ul
             ref={listRef}
-            className={cn({
-              [styles.menuList]: isOpen,
-              [styles.sidebarIcons]: !isOpen,
-            })}
+            className={`${isOpen ? styles.menuList : styles.sidebarIcons}`}
           >
             {menuItems.map((item) => (
               <li key={item.link} className={styles.menuItem}>
                 <a
                   href={item.link}
-                  className={cn({
-                    [styles.menuLink]: isOpen,
-                    [styles.iconLink]: !isOpen,
-                  })}
+                  className={`${isOpen ? styles.menuLink : styles.iconLink}`}
                   title={!isOpen ? item.title : undefined}
                 >
                   <img
                     src={item.icon}
                     alt={item.title}
-                    className={cn({
-                      [styles.menuIcon]: isOpen,
-                      [styles.iconImg]: !isOpen,
-                    })}
+                    className={`${isOpen ? styles.menuIcon : styles.iconImg}`}
                   />
                   {isOpen && (
                     <span className={styles.menuText}>{item.title}</span>

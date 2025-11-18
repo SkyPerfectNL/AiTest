@@ -1,20 +1,19 @@
-import type React from "react";
-import cn from "classnames";
-import styles from "./styles/ContainerHome.module.scss";
+import type React from 'react'
+import styles from './styles/ContainerHome.module.scss'
 
 export const HomeContainer: React.FC = () => {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.pageUp}>
-        <a href="/project" className={cn(styles.block, styles.first)}>
+        <a href="/project" className={`${styles.block} ${styles.first}`}>
           <p>Проект 1</p>
-          <p>перейти {">>"}</p>
+          <p>перейти {'>>'}</p>
         </a>
-        <a href="#" className={cn(styles.block, styles.second)}>
+        <a href="#" className={`${styles.block} ${styles.second}`}>
           <p>Проект 2</p>
-          <p>перейти {">>"}</p>
+          <p>перейти {'>>'}</p>
         </a>
-        <a href="#" className={cn(styles.block, styles.third)}>
+        <a href="#" className={`${styles.block} ${styles.third}`}>
           <p>Новый проект</p>
           <p>+</p>
         </a>
@@ -28,5 +27,5 @@ export const HomeContainer: React.FC = () => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}

@@ -1,7 +1,6 @@
 import React from 'react'
 import { useMenuItems } from './menuItems'
 import { useSidebar } from '@contexts/'
-import cn from 'classnames'
 import styles from './Sidebar.module.scss'
 
 export const SidebarOpen: React.FC = () => {
@@ -9,7 +8,7 @@ export const SidebarOpen: React.FC = () => {
   const { closeSidebar } = useSidebar()
 
   return (
-    <nav className={cn(styles.sidebarMenu, styles.open)}>
+    <nav className={`${styles.sidebarMenu} ${styles.open}`}>
       <button className={styles.closeSidebarMobile} onClick={closeSidebar}>
         ×
       </button>
