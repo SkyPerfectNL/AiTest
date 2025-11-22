@@ -1,8 +1,8 @@
 import type React from 'react'
 import { Outlet } from 'react-router-dom'
-import { Header, Pipeline, Sidebar } from '../'
 import { useSidebar } from '@contexts/'
 import styles from './Layout.module.scss'
+import { AuthModal, Header, Pipeline, Sidebar } from '@components/'
 
 export const Layout: React.FC = () => {
   const { isOpen } = useSidebar()
@@ -18,6 +18,8 @@ export const Layout: React.FC = () => {
         <div className={styles.mainContent}>
           <Outlet />
         </div>
+
+        <AuthModal />
       </div>
     </div>
   )

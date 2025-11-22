@@ -1,6 +1,5 @@
 export const PAGE_ENDPOINTS = {
-  INDEX: "/",
-  HOME: "/home",
-  PROJECT: "/project",
-  LOGIN: "/login",
-} as const;
+  INDEX: '/',
+  HOME: '/home',
+  PROJECT: '/project',
+} as const

@@ -1,0 +1,79 @@
+import React from 'react'
+import { RegisterFormData, FormDataToRecord, PartialFormData } from '@types/'
+import { AuthForm } from './AuthForm'
+
+interface RegisterFormProps {
+  formData: RegisterFormData
+  error: string
+  isLoading: boolean
+  onChange: (data: Partial<RegisterFormData>) => void
+  onSubmit: (e: React.FormEvent) => void
+  onSwitchToLogin: () => void
+}
+
+export const RegisterForm: React.FC<RegisterFormProps> = ({
+  formData,
+  error,
+  isLoading,
+  onChange,
+  onSubmit,
+  onSwitchToLogin,
+}) => {
+  const fields = [
+    {
+      name: 'username',
+      label: 'User name',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'email',
+      label: 'E-mail',
+      type: 'email',
+      required: true,
+    },
+    {
+      name: 'password',
+      label: 'Пароль',
+      type: 'password',
+      required: true,
+    },
+    {
+      name: 'confirmPassword',
+      label: 'Подтверждение пароля',
+      type: 'password',
+      required: true,
+    },
+  ]
+
+  const footerContent = (
+    <p>
+      Уже есть аккаунт?{' '}
+      <button
+        type="button"
+        className="authLinkButton"
+        onClick={onSwitchToLogin}
+      >
+        Войти
+      </button>
+    </p>
+  )
+
+  const handleFormChange = (data: PartialFormData<RegisterFormData>) => {
+    onChange(data as Partial<RegisterFormData>)
+  }
+
+  return (
+    <AuthForm
+      fields={fields}
+      formData={formData as FormDataToRecord<RegisterFormData>}
+      error={error}
+      isLoading={isLoading}
+      submitText="Зарегистрироваться"
+      loadingText="Регистрация..."
+      footerContent={footerContent}
+      onChange={handleFormChange}
+      onSubmit={onSubmit}
+    />
+  )
+}

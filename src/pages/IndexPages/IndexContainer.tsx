@@ -1,20 +1,36 @@
-import type React from "react";
-import styles from "./styles/IndexContainer.module.scss";
+import type React from 'react'
+import { ProtectedRoute } from '@components/'
+import { useAuth } from '@contexts/'
+import styles from './styles/IndexContainer.module.scss'
 
 export const IndexContainer: React.FC = () => {
+  const { openAuthModal, isAuthenticated } = useAuth()
+
   return (
-    <div className={styles.pageContainer}>
-      <div className={styles.pageUp}>
-        <p>Регистрация</p>
+    <ProtectedRoute requireAuth={false}>
+      <div className={styles.pageContainer}>
+        <div className={styles.pageUp}>
+          <p>Регистрация</p>
+          {!isAuthenticated && (
+            <button
+              onClick={() => openAuthModal('register')}
+              className={styles.registerButton}
+            >
+              Зарегистрироваться
+            </button>
+          )}
+        </div>
+        <div className={styles.pageDown}>
+          <p>
+            Для тестирования используйте:
+            <br />
+            • Email: test@test.com, Пароль: password123 (подтвержденный аккаунт)
+            <br />
+            • Email: demo@demo.com, Пароль: demo123 (неподтвержденный аккаунт)
+            <br />• Код подтверждения: 123456
+          </p>
+        </div>
       </div>
-      <div className={styles.pageDown}>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius quis vel
-          facere sunt. Soluta libero quibusdam voluptatem veniam necessitatibus
-          excepturi reprehenderit? Voluptatibus, tempora similique? Earum
-          molestias debitis facilis nostrum quo.
-        </p>
-      </div>
-    </div>
-  );
-};
+    </ProtectedRoute>
+  )
+}

@@ -1,7 +1,6 @@
 import type React from 'react'
-import { useSidebar } from '@contexts/'
+import { useSidebar, useAuth } from '@contexts/'
 import { MenuButton } from '@components/'
-
 import './Header.scss'
 
 interface HeaderProps {
@@ -11,6 +10,20 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ actionText, actionLink }) => {
   const { toggleSidebar } = useSidebar()
+  const { user, isAuthenticated, logout, openAuthModal } = useAuth()
+
+  const handleAuthAction = () => {
+    if (isAuthenticated) {
+      window.location.href = '/home'
+    } else {
+      openAuthModal('login')
+    }
+  }
+
+  const handleLogout = () => {
+    logout()
+    window.location.href = '/'
+  }
 
   return (
     <div className="header">
@@ -34,17 +47,39 @@ export const Header: React.FC<HeaderProps> = ({ actionText, actionLink }) => {
         </div>
       </div>
       <div className="headerRight">
-        <a href="/" className="headerAction">
-          Выйти
-        </a>
-        {actionLink && actionText ? (
-          <a href={actionLink} className="headerAction">
-            {actionText}
-          </a>
+        {isAuthenticated ? (
+          <>
+            <span className="userGreeting">
+              Привет, {user?.username || 'Пользователь'}{' '}
+            </span>
+            <button onClick={handleLogout} className="headerAction">
+              Выйти
+            </button>
+            {actionLink && actionText ? (
+              <a href={actionLink} className="headerAction">
+                {actionText}
+              </a>
+            ) : (
+              <button
+                onClick={() => (window.location.href = '/home')}
+                className="headerAction"
+              >
+                Личный кабинет
+              </button>
+            )}
+          </>
         ) : (
-          <a href={'/home'} className="headerAction">
-            {window.location.pathname == '/' ? 'Войти' : 'личный кабинет'}
-          </a>
+          <>
+            {actionLink && actionText ? (
+              <a href={actionLink} className="headerAction">
+                {actionText}
+              </a>
+            ) : (
+              <button onClick={handleAuthAction} className="headerAction">
+                {window.location.pathname === '/' ? 'Войти' : 'Личный кабинет'}
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>

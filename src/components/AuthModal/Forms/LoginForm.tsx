@@ -1,0 +1,69 @@
+import React from 'react'
+import { LoginFormData, FormDataToRecord, PartialFormData } from '@types/'
+import { AuthForm } from './AuthForm'
+
+interface LoginFormProps {
+  formData: LoginFormData
+  error: string
+  isLoading: boolean
+  onChange: (data: Partial<LoginFormData>) => void
+  onSubmit: (e: React.FormEvent) => void
+  onSwitchToRegister: () => void
+}
+
+export const LoginForm: React.FC<LoginFormProps> = ({
+  formData,
+  error,
+  isLoading,
+  onChange,
+  onSubmit,
+  onSwitchToRegister,
+}) => {
+  const fields = [
+    {
+      name: 'email',
+      label: 'E-mail',
+      type: 'email',
+      placeholder: 'test@test.com',
+      required: true,
+    },
+    {
+      name: 'password',
+      label: 'Пароль',
+      type: 'password',
+      placeholder: 'password123',
+      required: true,
+    },
+  ]
+
+  const footerContent = (
+    <p>
+      Нет аккаунта?{' '}
+      <button
+        type="button"
+        className="authLinkButton"
+        onClick={onSwitchToRegister}
+      >
+        Зарегистрироваться
+      </button>
+    </p>
+  )
+
+  const handleFormChange = (data: PartialFormData<LoginFormData>) => {
+    onChange(data as Partial<LoginFormData>)
+  }
+
+  return (
+    <AuthForm
+      fields={fields}
+      formData={formData as FormDataToRecord<LoginFormData>}
+      error={error}
+      isLoading={isLoading}
+      submitText="Войти"
+      loadingText="Вход..."
+      footerContent={footerContent}
+      onChange={handleFormChange}
+      onSubmit={onSubmit}
+    />
+  )
+}
