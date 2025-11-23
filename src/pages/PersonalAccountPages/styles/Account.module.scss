@@ -1,0 +1,18 @@
+@use '@styles/_variables.scss' as vars;
+
+.tabs {
+  & > button {
+    // margin-right: 10px;
+    width: 200px;
+    font-size: 20px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  border: none;
+}
+
+.hiddenTab {
+  display: none !important;
+}

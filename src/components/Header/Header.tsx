@@ -8,7 +8,7 @@ interface HeaderProps {
   actionLink?: string
 }
 
-export const Header: React.FC<HeaderProps> = ({ actionText, actionLink }) => {
+export const Header: React.FC<HeaderProps> = () => {
   const { toggleSidebar } = useSidebar()
   const { user, isAuthenticated, logout, openAuthModal } = useAuth()
 
@@ -47,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({ actionText, actionLink }) => {
         </div>
       </div>
       <div className="headerRight">
-        {isAuthenticated ? (
+        {isAuthenticated && (
           <>
             <span className="userGreeting">
               Привет, {user?.username || 'Пользователь'}{' '}
@@ -55,32 +55,20 @@ export const Header: React.FC<HeaderProps> = ({ actionText, actionLink }) => {
             <button onClick={handleLogout} className="headerAction">
               Выйти
             </button>
-            {actionLink && actionText ? (
-              <a href={actionLink} className="headerAction">
-                {actionText}
-              </a>
-            ) : (
-              <button
-                onClick={() => (window.location.href = '/home')}
-                className="headerAction"
-              >
-                Личный кабинет
-              </button>
-            )}
-          </>
-        ) : (
-          <>
-            {actionLink && actionText ? (
-              <a href={actionLink} className="headerAction">
-                {actionText}
-              </a>
-            ) : (
-              <button onClick={handleAuthAction} className="headerAction">
-                {window.location.pathname === '/' ? 'Войти' : 'Личный кабинет'}
-              </button>
-            )}
           </>
         )}
+        <button
+          onClick={() => {
+            if (isAuthenticated) {
+              window.location.href = '/account'
+            } else {
+              handleAuthAction()
+            }
+          }}
+          className="headerAction"
+        >
+          {isAuthenticated ? 'Личный кабинет' : 'Войти'}
+        </button>
       </div>
     </div>
   )

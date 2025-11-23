@@ -3,6 +3,7 @@ export interface AuthContextType {
   isAuthenticated: boolean
   authModal: AuthModalType
   pendingEmail: string
+  pendingPhone: string
   isLoading: boolean
   login: (email: string, password: string) => Promise<boolean>
   register: (
@@ -10,17 +11,32 @@ export interface AuthContextType {
     email: string,
     password: string
   ) => Promise<boolean>
-  confirmEmail: (code: string) => Promise<boolean>
+  confirmPending: (code: string, type: "phone" | "email") => Promise<boolean>
   logout: () => void
-  openAuthModal: (type: AuthModalType, email?: string) => void
-  closeAuthModal: () => void
+  openAuthModal: (type: AuthModalType, value?: string) => void
+  closeAuthModal: (type: AuthModalType) => void
+  updateUser: (user: User) => void
 }
 
 export interface User {
   id: string
+  status: "active" | "blocked" | "deleted"
   username: string
+  firstName: string
+  lastName: string
+  fatherName: string | null
   email: string
+  phone: string
+  phoneConfirmed: boolean
   emailConfirmed: boolean
+  country: string
+  city: string
+  company: string | null
+  employeeCount: "<10" | "11-30" | "30-100" | ">100" | null
+  jobPosition: string | null
+  usePurpose: "personal" | "testPersonal" | "testCompany" | "testJob"
+  teams: {name: string, role: string}[]
+
 }
 
 export interface LoginFormData {
@@ -35,7 +51,7 @@ export interface RegisterFormData {
   confirmPassword: string
 }
 
-export interface ConfirmEmailFormData {
+export interface ConfirmFormData {
   code: string
 }
 
@@ -45,4 +61,4 @@ export type FormDataToRecord<T> = {
 
 export type PartialFormData<T> = Partial<FormDataToRecord<T>>
 
-export type AuthModalType = 'login' | 'register' | 'confirm' | null
+export type AuthModalType = 'login' | 'register' | 'confirmEmail' | 'confirmPhone' | null

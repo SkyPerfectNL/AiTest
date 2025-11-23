@@ -1,26 +1,28 @@
 import React from 'react'
 import {
-  ConfirmEmailFormData,
+  ConfirmFormData,
   FormDataToRecord,
   PartialFormData,
 } from '@types/'
 import { AuthForm } from './AuthForm'
 
-interface ConfirmEmailFormProps {
-  formData: ConfirmEmailFormData
+interface ConfirmFormProps {
+  formData: ConfirmFormData
   error: string
+  confirmType: "phone" | "email"
   isLoading: boolean
-  pendingEmail: string
-  onChange: (data: Partial<ConfirmEmailFormData>) => void
+  pendingValue: string
+  onChange: (data: Partial<ConfirmFormData>) => void
   onSubmit: (e: React.FormEvent) => void
   onSwitchToLogin: () => void
 }
 
-export const ConfirmEmailForm: React.FC<ConfirmEmailFormProps> = ({
+export const ConfirmForm: React.FC<ConfirmFormProps> = ({
   formData,
   error,
+  confirmType,
   isLoading,
-  pendingEmail,
+  pendingValue,
   onChange,
   onSubmit,
   onSwitchToLogin,
@@ -28,7 +30,7 @@ export const ConfirmEmailForm: React.FC<ConfirmEmailFormProps> = ({
   const fields = [
     {
       name: 'code',
-      label: 'Код из e-mail',
+      label: `Код из ${confirmType == 'phone' ? 'sms' : 'e-mail'}`,
       type: 'text',
       placeholder: 'Введите 6-значный код',
       required: true,
@@ -37,6 +39,15 @@ export const ConfirmEmailForm: React.FC<ConfirmEmailFormProps> = ({
     },
   ]
 
+  const resendCode = () => {
+    if(confirmType == "phone") {
+      console.log("Resend sms")
+    }
+    else {
+      console.log("Reset email")
+    }
+  }
+
   const footerContent = (
     <>
       <p>
@@ -44,30 +55,30 @@ export const ConfirmEmailForm: React.FC<ConfirmEmailFormProps> = ({
         <button
           type="button"
           className="authLinkButton"
-          onClick={() => console.log('Resend code')}
+          onClick={resendCode}
         >
           Отправить повторно
         </button>
       </p>
-      <button
+      {/* <button
         type="button"
         className="authLinkButton"
         onClick={onSwitchToLogin}
       >
         Вернуться к входу
-      </button>
+      </button> */}
     </>
   )
 
-  const handleFormChange = (data: PartialFormData<ConfirmEmailFormData>) => {
-    onChange(data as Partial<ConfirmEmailFormData>)
+  const handleFormChange = (data: PartialFormData<ConfirmFormData>) => {
+    onChange(data as Partial<ConfirmFormData>)
   }
 
   return (
     <>
       <AuthForm
         fields={fields}
-        formData={formData as FormDataToRecord<ConfirmEmailFormData>}
+        formData={formData as FormDataToRecord<ConfirmFormData>}
         error={error}
         isLoading={isLoading}
         submitText="Подтвердить"
@@ -77,9 +88,9 @@ export const ConfirmEmailForm: React.FC<ConfirmEmailFormProps> = ({
         onSubmit={onSubmit}
       />
 
-      {pendingEmail && (
+      {pendingValue && (
         <div className="authEmailNotice">
-          Код отправлен на: <strong>{pendingEmail}</strong>
+          Код отправлен на: <strong>{pendingValue}</strong>
           <br />
           <small>
             Для демо используйте код: <strong>123456</strong>

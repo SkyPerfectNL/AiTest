@@ -3,7 +3,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { AuthProvider, SidebarProvider } from '@contexts/'
 import { Layout, ProtectedRoute } from '@components/'
 import { PAGE_ENDPOINTS } from './constants'
-import { HomeContainer, IndexContainer, ProjectContainer } from './pages'
+import { HomeContainer, IndexContainer, ProjectContainer, PersonalAccountContainer } from './pages'
 
 import './index.css'
 
@@ -15,7 +15,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: PAGE_ENDPOINTS.INDEX,
-        element: <IndexContainer />,
+        element: (
+        <ProtectedRoute requireAuth={false}>
+          <IndexContainer />    
+        </ProtectedRoute>
+      ),
       },
       {
         path: PAGE_ENDPOINTS.HOME,
@@ -30,6 +34,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <ProjectContainer />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: PAGE_ENDPOINTS.ACCOUNT,
+        element: (
+          <ProtectedRoute>
+            <PersonalAccountContainer />
           </ProtectedRoute>
         ),
       },

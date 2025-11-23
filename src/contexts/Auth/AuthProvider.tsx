@@ -2,20 +2,50 @@ import React, { useState, useEffect } from 'react'
 import { User, AuthModalType, AuthContextType } from '@types/'
 import { AuthContext } from './AuthContext'
 
-const mockUsers = [
+interface mockUser extends User {
+  password: string
+}
+
+const mockUsers: mockUser[] = [
   {
     id: '1',
+    status: 'active',
     username: 'testuser',
+    firstName: 'name',
+    lastName: 'lastName',
+    fatherName: 'fatherName',
     email: 'test@test.com',
-    password: 'password123',
+    phone: '+79217990312',
+    phoneConfirmed: true,
     emailConfirmed: true,
+    country: 'Country1',
+    city: 'City1',
+    company: 'company1',
+    employeeCount: '11-30',
+    jobPosition: 'job1',
+    usePurpose: 'testCompany',
+    teams: [{ name: 'team1', role: 'role1' }],
+    password: 'password123',
   },
   {
     id: '2',
+    status: 'active',
     username: 'demo',
+    firstName: 'demo',
+    lastName: 'lastName',
+    fatherName: 'fatherName',
     email: 'demo@demo.com',
-    password: 'demo123',
+    phone: '+79217990312',
+    phoneConfirmed: false,
     emailConfirmed: false,
+    country: 'Country1',
+    city: 'City1',
+    company: null,
+    employeeCount: null,
+    jobPosition: null,
+    usePurpose: 'personal',
+    teams: [{ name: 'team1', role: 'role1' }],
+    password: 'demo123',
   },
 ]
 
@@ -25,6 +55,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null)
   const [authModal, setAuthModal] = useState<AuthModalType>(null)
   const [pendingEmail, setPendingEmail] = useState('')
+  const [pendingPhone, setPendingPhone] = useState('')
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -35,26 +66,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoading(false)
   }, [])
 
+  const updateUser = (user: User) => {
+    setUser(user)
+    // console.log(user)
+    localStorage.setItem('currentUser', JSON.stringify(user))
+  }
+
   const login = async (email: string, password: string): Promise<boolean> => {
     const foundUser = mockUsers.find(
       (u) => u.email === email && u.password === password
     )
 
     if (foundUser) {
-      const userData: User = {
-        id: foundUser.id,
-        username: foundUser.username,
-        email: foundUser.email,
-        emailConfirmed: foundUser.emailConfirmed,
-      }
+      const userData: User = { ...foundUser }
 
       setUser(userData)
       localStorage.setItem('currentUser', JSON.stringify(userData))
 
       if (!foundUser.emailConfirmed) {
-        openAuthModal('confirm', foundUser.email)
+        openAuthModal('confirmEmail', foundUser.email)
       } else {
-        closeAuthModal()
+        closeAuthModal("login")
       }
       return true
     }
@@ -71,22 +103,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return false
     }
 
-    openAuthModal('confirm', email)
+    openAuthModal('confirmEmail', email)
     return true
   }
 
-  const confirmEmail = async (code: string): Promise<boolean> => {
-    if (code === '123456') {
-      if (user) {
-        const updatedUser = { ...user, emailConfirmed: true }
-        setUser(updatedUser)
-        localStorage.setItem('currentUser', JSON.stringify(updatedUser))
+  const confirmPending = async (
+    code: string,
+    type: 'phone' | 'email'
+  ): Promise<boolean> => {
+    if (type === 'phone') {
+      if (code === '123456') {
+        if (user) {
+          const updatedUser:User = { ...user, phoneConfirmed: true }
+          setUser(updatedUser)
+          localStorage.setItem('currentUser', JSON.stringify(updatedUser))
+        }
+        closeAuthModal("confirmPhone")
+        return true
       }
-      closeAuthModal()
-      return true
-    }
 
-    return false
+      return false
+    } else {
+      if (code === '123456') {
+        if (user) {
+          const updatedUser: User = { ...user, emailConfirmed: true }
+          setUser(updatedUser)
+          localStorage.setItem('currentUser', JSON.stringify(updatedUser))
+        }
+        closeAuthModal("confirmEmail")
+        return true
+      }
+
+      return false
+    }
   }
 
   const logout = () => {
@@ -94,14 +143,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem('currentUser')
   }
 
-  const openAuthModal = (type: AuthModalType, email: string = '') => {
+  const openAuthModal = (type: AuthModalType, value: string = "") => {
     setAuthModal(type)
-    setPendingEmail(email)
+    if (type == "confirmEmail") {
+      setPendingEmail(value)
+    }
+    else if (type == "confirmPhone") {
+      setPendingPhone(value)
+    }
   }
 
-  const closeAuthModal = () => {
+  const closeAuthModal = (type: AuthModalType) => {
     setAuthModal(null)
-    setPendingEmail('')
+        if (type == "confirmEmail") {
+      setPendingEmail("")
+    }
+    else if (type == "confirmPhone") {
+      setPendingPhone("")
+    }
   }
 
   const value: AuthContextType = {
@@ -109,13 +168,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     isAuthenticated: !!user,
     authModal,
     pendingEmail,
+    pendingPhone,
     isLoading,
     login,
     register,
-    confirmEmail,
+    confirmPending,
     logout,
     openAuthModal,
     closeAuthModal,
+    updateUser,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
