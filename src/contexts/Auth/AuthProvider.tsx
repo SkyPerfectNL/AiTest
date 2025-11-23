@@ -9,42 +9,68 @@ interface mockUser extends User {
 const mockUsers: mockUser[] = [
   {
     id: '1',
-    status: 'active',
-    username: 'testuser',
-    firstName: 'name',
-    lastName: 'lastName',
-    fatherName: 'fatherName',
-    email: 'test@test.com',
-    phone: '+79217990312',
-    phoneConfirmed: true,
-    emailConfirmed: true,
-    country: 'Country1',
-    city: 'City1',
-    company: 'company1',
-    employeeCount: '11-30',
-    jobPosition: 'job1',
-    usePurpose: 'testCompany',
-    teams: [{ name: 'team1', role: 'role1' }],
+    profileData: {
+      status: 'active',
+      username: 'testuser',
+      firstName: 'name',
+      lastName: 'lastName',
+      fatherName: 'fatherName',
+      email: 'test@test.com',
+      phone: '+79217990312',
+      phoneConfirmed: true,
+      emailConfirmed: true,
+      country: 'Country1',
+      city: 'City1',
+      company: 'company1',
+      employeeCount: '11-30',
+      jobPosition: 'job1',
+      usePurpose: 'testCompany',
+      teams: [{ name: 'team1', role: 'role1' }],
+    },
+    financeData: {
+      balance: 123,
+      subscription: 1,
+    },
+    settingsData: {
+      flag: true,
+    },
+    projectData: {
+      projects: [{ name: 'project1' }, { name: 'project1' }],
+    },
+    isAdmin: true,
     password: 'password123',
   },
   {
     id: '2',
-    status: 'active',
-    username: 'demo',
-    firstName: 'demo',
-    lastName: 'lastName',
-    fatherName: 'fatherName',
-    email: 'demo@demo.com',
-    phone: '+79217990312',
-    phoneConfirmed: false,
-    emailConfirmed: false,
-    country: 'Country1',
-    city: 'City1',
-    company: null,
-    employeeCount: null,
-    jobPosition: null,
-    usePurpose: 'personal',
-    teams: [{ name: 'team1', role: 'role1' }],
+    profileData: {
+      status: 'active',
+      username: 'demo',
+      firstName: 'demo',
+      lastName: 'lastName',
+      fatherName: 'fatherName',
+      email: 'demo@demo.com',
+      phone: '+79217990312',
+      phoneConfirmed: false,
+      emailConfirmed: false,
+      country: 'Country1',
+      city: 'City1',
+      company: null,
+      employeeCount: null,
+      jobPosition: null,
+      usePurpose: 'personal',
+      teams: [{ name: 'team1', role: 'role1' }],
+    },
+    financeData: {
+      balance: 456,
+      subscription: 0,
+    },
+    settingsData: {
+      flag: true,
+    },
+    projectData: {
+      projects: [{ name: 'project4' }, { name: 'project3' }],
+    },
+    isAdmin: false,
     password: 'demo123',
   },
 ]
@@ -74,7 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = async (email: string, password: string): Promise<boolean> => {
     const foundUser = mockUsers.find(
-      (u) => u.email === email && u.password === password
+      (u) => u.profileData.email === email && u.password === password
     )
 
     if (foundUser) {
@@ -83,10 +109,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setUser(userData)
       localStorage.setItem('currentUser', JSON.stringify(userData))
 
-      if (!foundUser.emailConfirmed) {
-        openAuthModal('confirmEmail', foundUser.email)
+      if (!foundUser.profileData.emailConfirmed) {
+        openAuthModal('confirmEmail', foundUser.profileData.email)
       } else {
-        closeAuthModal("login")
+        closeAuthModal('login')
       }
       return true
     }
@@ -98,7 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     username: string,
     email: string
   ): Promise<boolean> => {
-    const userExists = mockUsers.some((u) => u.email === email)
+    const userExists = mockUsers.some((u) => u.profileData.email === email)
     if (userExists) {
       return false
     }
@@ -114,11 +140,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (type === 'phone') {
       if (code === '123456') {
         if (user) {
-          const updatedUser:User = { ...user, phoneConfirmed: true }
+          const updatedUser: User = { ...user}
+          user.profileData.phoneConfirmed = true
           setUser(updatedUser)
           localStorage.setItem('currentUser', JSON.stringify(updatedUser))
         }
-        closeAuthModal("confirmPhone")
+        closeAuthModal('confirmPhone')
         return true
       }
 
@@ -126,11 +153,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       if (code === '123456') {
         if (user) {
-          const updatedUser: User = { ...user, emailConfirmed: true }
+          const updatedUser: User = { ...user}
+          updatedUser.profileData.emailConfirmed = true
           setUser(updatedUser)
           localStorage.setItem('currentUser', JSON.stringify(updatedUser))
         }
-        closeAuthModal("confirmEmail")
+        closeAuthModal('confirmEmail')
         return true
       }
 
@@ -143,23 +171,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem('currentUser')
   }
 
-  const openAuthModal = (type: AuthModalType, value: string = "") => {
+  const openAuthModal = (type: AuthModalType, value: string = '') => {
     setAuthModal(type)
-    if (type == "confirmEmail") {
+    if (type == 'confirmEmail') {
       setPendingEmail(value)
-    }
-    else if (type == "confirmPhone") {
+    } else if (type == 'confirmPhone') {
       setPendingPhone(value)
     }
   }
 
   const closeAuthModal = (type: AuthModalType) => {
     setAuthModal(null)
-        if (type == "confirmEmail") {
-      setPendingEmail("")
-    }
-    else if (type == "confirmPhone") {
-      setPendingPhone("")
+    if (type == 'confirmEmail') {
+      setPendingEmail('')
+    } else if (type == 'confirmPhone') {
+      setPendingPhone('')
     }
   }
 

@@ -5,7 +5,7 @@ import {
   PartialFormData,
 } from '@types/'
 import { AuthForm } from './AuthForm'
-
+import styles from "../AuthModal.module.scss"
 interface ConfirmFormProps {
   formData: ConfirmFormData
   error: string
@@ -54,7 +54,7 @@ export const ConfirmForm: React.FC<ConfirmFormProps> = ({
         Не получили код?{' '}
         <button
           type="button"
-          className="authLinkButton"
+          className={styles.authLinkButton}
           onClick={resendCode}
         >
           Отправить повторно
@@ -89,7 +89,7 @@ export const ConfirmForm: React.FC<ConfirmFormProps> = ({
       />
 
       {pendingValue && (
-        <div className="authEmailNotice">
+        <div className={styles.authEmailNotice}>
           Код отправлен на: <strong>{pendingValue}</strong>
           <br />
           <small>

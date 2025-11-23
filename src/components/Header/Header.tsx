@@ -12,14 +12,6 @@ export const Header: React.FC<HeaderProps> = () => {
   const { toggleSidebar } = useSidebar()
   const { user, isAuthenticated, logout, openAuthModal } = useAuth()
 
-  const handleAuthAction = () => {
-    if (isAuthenticated) {
-      window.location.href = '/home'
-    } else {
-      openAuthModal('login')
-    }
-  }
-
   const handleLogout = () => {
     logout()
     window.location.href = '/'
@@ -58,11 +50,12 @@ export const Header: React.FC<HeaderProps> = () => {
           </>
         )}
         <button
-          onClick={() => {
+          onClick={(e) => {
             if (isAuthenticated) {
               window.location.href = '/account'
             } else {
-              handleAuthAction()
+              openAuthModal('login')
+              e.currentTarget.blur()
             }
           }}
           className="headerAction"

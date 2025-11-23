@@ -1,13 +1,15 @@
 import { useAuth } from '@contexts/'
-import { User } from '@types/'
+import { User, ProfileData } from '@types/'
 import type React from 'react'
 import { useForm, Controller, Control, FieldError } from 'react-hook-form'
-import styles from '../styles/ProfileTab.module.scss'
+import stylesProfile from '../styles/ProfileTab.module.scss'
+import stylesGeneral from '../styles/Account.module.scss'
 
 const statusMap = {
   active: 'Активен',
   blocked: 'Заблокирован',
   deleted: 'Удалён',
+  unknown: 'неизвестно',
 }
 
 export const ProfileTab: React.FC = () => {
@@ -18,27 +20,30 @@ export const ProfileTab: React.FC = () => {
     reset,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<User>({ defaultValues: user })
+  } = useForm<ProfileData>({ defaultValues: user?.profileData })
 
   const company = watch('company')
   const email = watch('email')
   const phone = watch('phone')
 
-  const handleSave = (data: User) => {
-    if (!data.company) {
-      data.employeeCount = null
-      data.jobPosition = null
-      data.company = null
+  const handleSave = (data: ProfileData) => {
+    if (user) {
+      if (!data.company) {
+        data.employeeCount = null
+        data.jobPosition = null
+        data.company = null
+      }
+      !data.fatherName && data.fatherName == null
+      if (user.profileData.email !== data.email) {
+        data.emailConfirmed == false
+      }
+      if (user.profileData.phone !== data.phone) {
+        data.phoneConfirmed = false
+      }
+      user.profileData = data
+      console.log(user)
+      updateUser(user)
     }
-    !data.fatherName && data.fatherName == null
-    if (user?.email !== data.email) {
-      data.emailConfirmed == false
-    }
-    if (user?.phone !== data.phone) {
-      data.phoneConfirmed = false
-    }
-    console.log(data)
-    updateUser(data)
   }
 
   const handleConfirmEmail = () => {
@@ -52,78 +57,98 @@ export const ProfileTab: React.FC = () => {
   }
 
   return (
-    <div className={styles.profileTab}>
-      <form onSubmit={handleSubmit(handleSave)} className={styles.form}>
-        <div className={styles.editableSection}>
-          <label className={styles.label}>Статус</label>
-          <div className={styles.displayValue}>{statusMap[user?.status]}</div>
+    <div className={stylesProfile.profileTab}>
+      <form onSubmit={handleSubmit(handleSave)} className={stylesProfile.form}>
+        <div className={stylesProfile.editableSection}>
+          <label className={stylesProfile.label}>Статус</label>
+          <div className={stylesProfile.displayValue}>
+            {statusMap[user?.profileData.status || 'unknown']}
+          </div>
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.label}>Имя пользователя</label>
+          <div className={stylesProfile.fieldGroup}>
+            <label className={stylesProfile.label}>Имя пользователя</label>
             <Controller
               name="username"
               control={control}
               rules={{ required: 'введите имя пользователя' }}
               render={({ field }) => (
-                <input {...field} className={styles.input} type="text" />
+                <input {...field} className={stylesProfile.input} type="text" />
               )}
             />
             {errors.username && (
-              <span className={styles.error}>{errors.username.message}</span>
+              <span className={stylesProfile.error}>
+                {errors.username.message}
+              </span>
             )}
           </div>
 
-          <div className={styles.nameRow}>
-            <div className={styles.fieldGroup}>
-              <label className={styles.label}>Имя</label>
+          <div className={stylesProfile.nameRow}>
+            <div className={stylesProfile.fieldGroup}>
+              <label className={stylesProfile.label}>Имя</label>
               <Controller
                 name="firstName"
                 control={control}
                 rules={{ required: 'Введите ваше имя' }}
                 render={({ field }) => (
-                  <input {...field} className={styles.input} type="text" />
+                  <input
+                    {...field}
+                    className={stylesProfile.input}
+                    type="text"
+                  />
                 )}
               />
               {errors.firstName && (
-                <span className={styles.error}>{errors.firstName.message}</span>
+                <span className={stylesProfile.error}>
+                  {errors.firstName.message}
+                </span>
               )}
             </div>
 
-            <div className={styles.fieldGroup}>
-              <label className={styles.label}>Фамилия</label>
+            <div className={stylesProfile.fieldGroup}>
+              <label className={stylesProfile.label}>Фамилия</label>
               <Controller
                 name="lastName"
                 control={control}
                 rules={{ required: 'Введите вашу фимилию' }}
                 render={({ field }) => (
-                  <input {...field} className={styles.input} type="text" />
+                  <input
+                    {...field}
+                    className={stylesProfile.input}
+                    type="text"
+                  />
                 )}
               />
               {errors.lastName && (
-                <span className={styles.error}>{errors.lastName.message}</span>
+                <span className={stylesProfile.error}>
+                  {errors.lastName.message}
+                </span>
               )}
             </div>
 
-            <div className={styles.fieldGroup}>
-              <label className={styles.label}>Отчество</label>
+            <div className={stylesProfile.fieldGroup}>
+              <label className={stylesProfile.label}>Отчество</label>
               <Controller
                 name="fatherName"
                 control={control}
                 render={({ field }) => (
-                  <input {...field} className={styles.input} type="text" />
+                  <input
+                    {...field}
+                    className={stylesProfile.input}
+                    type="text"
+                  />
                 )}
               />
             </div>
           </div>
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.label}>
+          <div className={stylesProfile.fieldGroup}>
+            <label className={stylesProfile.label}>
               Почта
-              {!user?.emailConfirmed && (
+              {!user?.profileData.emailConfirmed && (
                 <button
                   type="button"
                   onClick={handleConfirmEmail}
-                  className={styles.confirmButton}
+                  className={stylesProfile.confirmButton}
                 >
                   Подтвердить
                 </button>
@@ -140,22 +165,28 @@ export const ProfileTab: React.FC = () => {
                 // },
               }}
               render={({ field }) => (
-                <input {...field} className={styles.input} type="email" />
+                <input
+                  {...field}
+                  className={stylesProfile.input}
+                  type="email"
+                />
               )}
             />
             {errors.email && (
-              <span className={styles.error}>{errors.email.message}</span>
+              <span className={stylesProfile.error}>
+                {errors.email.message}
+              </span>
             )}
           </div>
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.label}>
+          <div className={stylesProfile.fieldGroup}>
+            <label className={stylesProfile.label}>
               Номер телефона
-              {!user?.phoneConfirmed && (
+              {!user?.profileData.phoneConfirmed && (
                 <button
                   type="button"
                   onClick={handleConfirmPhone}
-                  className={styles.confirmButton}
+                  className={stylesProfile.confirmButton}
                 >
                   Подтвердить
                 </button>
@@ -172,53 +203,57 @@ export const ProfileTab: React.FC = () => {
                 },
               }}
               render={({ field }) => (
-                <input {...field} className={styles.input} type="tel" />
+                <input {...field} className={stylesProfile.input} type="tel" />
               )}
             />
             {errors.phone && (
-              <span className={styles.error}>{errors.phone.message}</span>
+              <span className={stylesProfile.error}>
+                {errors.phone.message}
+              </span>
             )}
           </div>
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.label}>Страна</label>
+          <div className={stylesProfile.fieldGroup}>
+            <label className={stylesProfile.label}>Страна</label>
             <Controller
               name="country"
               control={control}
               rules={{ required: 'Введите страну' }}
               render={({ field }) => (
-                <input {...field} className={styles.input} type="text" />
+                <input {...field} className={stylesProfile.input} type="text" />
               )}
             />
             {errors.country && (
-              <span className={styles.error}>{errors.country.message}</span>
+              <span className={stylesProfile.error}>
+                {errors.country.message}
+              </span>
             )}
           </div>
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.label}>Город</label>
+          <div className={stylesProfile.fieldGroup}>
+            <label className={stylesProfile.label}>Город</label>
             <Controller
               name="city"
               control={control}
               rules={{ required: 'Введите город' }}
               render={({ field }) => (
-                <input {...field} className={styles.input} type="text" />
+                <input {...field} className={stylesProfile.input} type="text" />
               )}
             />
             {errors.city && (
-              <span className={styles.error}>{errors.city.message}</span>
+              <span className={stylesProfile.error}>{errors.city.message}</span>
             )}
           </div>
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.label}>Компания</label>
+          <div className={stylesProfile.fieldGroup}>
+            <label className={stylesProfile.label}>Компания</label>
             <Controller
               name="company"
               control={control}
               render={({ field }) => (
                 <input
                   {...field}
-                  className={styles.input}
+                  className={stylesProfile.input}
                   type="text"
                   value={field.value || ''}
                   placeholder="Нет"
@@ -229,8 +264,10 @@ export const ProfileTab: React.FC = () => {
 
           {company && (
             <>
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Количество работников</label>
+              <div className={stylesProfile.fieldGroup}>
+                <label className={stylesProfile.label}>
+                  Количество работников
+                </label>
                 <Controller
                   name="employeeCount"
                   control={control}
@@ -242,7 +279,7 @@ export const ProfileTab: React.FC = () => {
                   render={({ field }) => (
                     <select
                       {...field}
-                      className={styles.select}
+                      className={stylesProfile.select}
                       value={field.value || '<10'}
                     >
                       <option value="<10">менее 10</option>
@@ -254,8 +291,8 @@ export const ProfileTab: React.FC = () => {
                 />
               </div>
 
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Должность</label>
+              <div className={stylesProfile.fieldGroup}>
+                <label className={stylesProfile.label}>Должность</label>
                 <Controller
                   name="jobPosition"
                   control={control}
@@ -267,7 +304,7 @@ export const ProfileTab: React.FC = () => {
                   render={({ field }) => (
                     <input
                       {...field}
-                      className={styles.input}
+                      className={stylesProfile.input}
                       type="text"
                       value={field.value || ''}
                     />
@@ -277,14 +314,14 @@ export const ProfileTab: React.FC = () => {
             </>
           )}
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.label}>Цель использования</label>
+          <div className={stylesProfile.fieldGroup}>
+            <label className={stylesProfile.label}>Цель использования</label>
             <Controller
               name="usePurpose"
               control={control}
               rules={{ required: 'Пожалуйста, выберите один из вариантов' }}
               render={({ field }) => (
-                <select {...field} className={styles.select}>
+                <select {...field} className={stylesProfile.select}>
                   <option value="personal">Личное использование</option>
                   <option value="testPersonal">
                     Тестирование собстенных разработок
@@ -299,25 +336,27 @@ export const ProfileTab: React.FC = () => {
               )}
             />
             {errors.usePurpose && (
-              <span className={styles.error}>{errors.usePurpose.message}</span>
+              <span className={stylesProfile.error}>
+                {errors.usePurpose.message}
+              </span>
             )}
           </div>
         </div>
 
-        <div className={styles.actions}>
+        <div className={stylesProfile.actions}>
           <button
             type="submit"
             disabled={isSubmitting}
-            className={styles.submitButton}
+            className={stylesGeneral.submitButton}
           >
-            {isSubmitting ? 'Saving...' : 'Save Changes'}
+            {isSubmitting ? 'Сохранение...' : 'Сохранить'}
           </button>
         </div>
 
-        <div className={styles.teamsSection}>
-          <h3 className={styles.sectionTitle}>Ваши команды</h3>
-          {user?.teams && user.teams.length > 0 ? (
-            <table className={styles.teamsTable}>
+        <div className={stylesProfile.teamsSection}>
+          <h3 className={stylesProfile.sectionTitle}>Ваши команды</h3>
+          {user?.profileData.teams && user.profileData.teams.length > 0 ? (
+            <table className={stylesProfile.teamsTable}>
               <thead>
                 <tr>
                   <th>Имя команды</th>
@@ -325,7 +364,7 @@ export const ProfileTab: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {user.teams.map((team, index) => (
+                {user.profileData.teams.map((team, index) => (
                   <tr key={index}>
                     <td>{team.name}</td>
                     <td>{team.role}</td>
@@ -334,9 +373,23 @@ export const ProfileTab: React.FC = () => {
               </tbody>
             </table>
           ) : (
-            <p className={styles.noTeams}>У вас нет команд!</p>
+            <p className={stylesProfile.noTeams}>У вас нет команд!</p>
           )}
         </div>
+        {user?.isAdmin && (
+          <div className={stylesProfile.actions}>
+            <button
+              type="button"
+              className={stylesGeneral.submitButton}
+              onClick={(e) => {
+                console.log('to admin')
+                e.currentTarget.blur()
+              }}
+            >
+              К панели администратора
+            </button>
+          </div>
+        )}
       </form>
     </div>
   )

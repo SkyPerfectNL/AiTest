@@ -1,3 +1,5 @@
+import { User } from "./user"
+
 export interface AuthContextType {
   user: User | null
   isAuthenticated: boolean
@@ -16,27 +18,6 @@ export interface AuthContextType {
   openAuthModal: (type: AuthModalType, value?: string) => void
   closeAuthModal: (type: AuthModalType) => void
   updateUser: (user: User) => void
-}
-
-export interface User {
-  id: string
-  status: "active" | "blocked" | "deleted"
-  username: string
-  firstName: string
-  lastName: string
-  fatherName: string | null
-  email: string
-  phone: string
-  phoneConfirmed: boolean
-  emailConfirmed: boolean
-  country: string
-  city: string
-  company: string | null
-  employeeCount: "<10" | "11-30" | "30-100" | ">100" | null
-  jobPosition: string | null
-  usePurpose: "personal" | "testPersonal" | "testCompany" | "testJob"
-  teams: {name: string, role: string}[]
-
 }
 
 export interface LoginFormData {

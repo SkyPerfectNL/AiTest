@@ -149,6 +149,11 @@
   cursor: pointer;
   transition: background-color 0.2s;
 
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+  &:focus {
+    box-shadow: inset 5px 5px 5px black;
+  }
+
   &:hover:not(:disabled) {
     background-color: #0056b3;
   }
