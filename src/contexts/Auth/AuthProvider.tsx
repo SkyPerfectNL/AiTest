@@ -32,7 +32,16 @@ const mockUsers: mockUser[] = [
       subscription: 1,
     },
     settingsData: {
-      flag: true,
+      language: "ru",
+      theme: "light",
+      name: true,
+      email: false,
+      phone: false,
+      country: true,
+      city: true,
+      company: true,
+      jobPosition: false,
+      teams: [true, false]
     },
     projectData: {
       projects: [{ name: 'project1' }, { name: 'project1' }],
@@ -65,7 +74,16 @@ const mockUsers: mockUser[] = [
       subscription: 0,
     },
     settingsData: {
-      flag: true,
+      language: "ru",
+      theme: "light",
+      name: true,
+      email: false,
+      phone: false,
+      country: true,
+      city: true,
+      company: null,
+      jobPosition: null,
+      teams: [true, false]
     },
     projectData: {
       projects: [{ name: 'project4' }, { name: 'project3' }],

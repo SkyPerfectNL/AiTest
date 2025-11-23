@@ -1,7 +1,7 @@
 import { Pipeline, Tabs } from '@components/';
 import type React from 'react';
 import { useState } from 'react';
-import { ProfileTab, FinanceTab } from './tabs';
+import { ProfileTab, FinanceTab, SettingsTab } from './tabs';
 import styles from './styles/Account.module.scss';
 
 export const PersonalAccountContainer: React.FC = () => {
@@ -25,7 +25,7 @@ export const PersonalAccountContainer: React.FC = () => {
         <FinanceTab/>
       </div>
       <div className={activeTab === "settings" ? styles.pageContainer : styles.hiddenTab}>
-        3
+        <SettingsTab/>
       </div>
     </>
   )

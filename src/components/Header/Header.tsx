@@ -42,7 +42,7 @@ export const Header: React.FC<HeaderProps> = () => {
         {isAuthenticated && (
           <>
             <span className="userGreeting">
-              Привет, {user?.username || 'Пользователь'}{' '}
+              Привет, {user?.profileData.username || 'Пользователь'}{' '}
             </span>
             <button onClick={handleLogout} className="headerAction">
               Выйти

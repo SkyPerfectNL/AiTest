@@ -1,3 +1,3 @@
 export * from "./ProfileTab";
 export * from "./FinancesTab";
-// export * from "./SettingsTab";
+export * from "./SettingsTab";

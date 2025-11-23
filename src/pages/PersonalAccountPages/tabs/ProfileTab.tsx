@@ -4,6 +4,7 @@ import type React from 'react'
 import { useForm, Controller, Control, FieldError } from 'react-hook-form'
 import stylesProfile from '../styles/ProfileTab.module.scss'
 import stylesGeneral from '../styles/Account.module.scss'
+import { useEffect } from 'react'
 
 const statusMap = {
   active: 'Активен',
@@ -19,12 +20,27 @@ export const ProfileTab: React.FC = () => {
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ProfileData>({ defaultValues: user?.profileData })
 
   const company = watch('company')
   const email = watch('email')
   const phone = watch('phone')
+
+  useEffect(() => {
+    if (company && company !== '') {
+      const currentEmployeeCount = watch('employeeCount')
+      const currentJobPosition = watch('jobPosition')
+      
+      if (!currentEmployeeCount) {
+        setValue('employeeCount', '<10')
+      }
+      if (!currentJobPosition) {
+        setValue('jobPosition', '')
+      }
+    }
+  }, [company, setValue, watch])
 
   const handleSave = (data: ProfileData) => {
     if (user) {
@@ -60,8 +76,9 @@ export const ProfileTab: React.FC = () => {
     <div className={stylesProfile.profileTab}>
       <form onSubmit={handleSubmit(handleSave)} className={stylesProfile.form}>
         <div className={stylesProfile.editableSection}>
+          <h3 className={stylesProfile.sectionTitle}>Ваш профиль</h3>
           <label className={stylesProfile.label}>Статус</label>
-          <div className={stylesProfile.displayValue}>
+          <div className={stylesProfile.statusDiv}>
             {statusMap[user?.profileData.status || 'unknown']}
           </div>
 
@@ -289,6 +306,11 @@ export const ProfileTab: React.FC = () => {
                     </select>
                   )}
                 />
+                {errors.employeeCount && (
+                  <span className={stylesProfile.error}>
+                    {errors.employeeCount.message}
+                  </span>
+                )}
               </div>
 
               <div className={stylesProfile.fieldGroup}>
@@ -310,6 +332,11 @@ export const ProfileTab: React.FC = () => {
                     />
                   )}
                 />
+                {errors.jobPosition && (
+                  <span className={stylesProfile.error}>
+                    {errors.jobPosition.message}
+                  </span>
+                )}
               </div>
             </>
           )}

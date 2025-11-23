@@ -1,7 +1,7 @@
-import { Project } from "./project"
+import { Project } from './project'
 
 export interface ProfileData {
-  status: "active" | "blocked" | "deleted"
+  status: 'active' | 'blocked' | 'deleted'
   username: string
   firstName: string
   lastName: string
@@ -13,17 +13,26 @@ export interface ProfileData {
   country: string
   city: string
   company: string | null
-  employeeCount: "<10" | "11-30" | "30-100" | ">100" | null
+  employeeCount: '<10' | '11-30' | '30-100' | '>100' | null
   jobPosition: string | null
-  usePurpose: "personal" | "testPersonal" | "testCompany" | "testJob"
-  teams: {name: string, role: string}[]
+  usePurpose: 'personal' | 'testPersonal' | 'testCompany' | 'testJob'
+  teams: { name: string; role: string }[]
 }
 export interface FinanceData {
   balance: number
   subscription: 1 | 2 | 3 | 0
 }
 export interface SettingsData {
-  flag: boolean
+  theme: 'light' | 'dark'
+  name: boolean
+  email: boolean
+  phone: boolean
+  country: boolean
+  city: boolean
+  company: boolean | null
+  jobPosition: boolean | null
+  teams: boolean[]
+  language: "ru" | "en"
 }
 export interface ProjectData {
   projects: Project[]
@@ -36,5 +45,4 @@ export interface User {
   financeData: FinanceData
   settingsData: SettingsData
   projectData: ProjectData
-
 }
