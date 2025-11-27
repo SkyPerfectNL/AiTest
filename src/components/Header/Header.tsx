@@ -14,7 +14,7 @@ export const Header: React.FC<HeaderProps> = () => {
   const { toggleSidebar } = useSidebar()
   const { user, isAuthenticated, logout, openAuthModal } = useAuth()
   const [openDropdown, setOpenDropdown] = useState(false)
-  const [timeoutID, setTimeOutId] = useState<NodeJS.Timeout>()
+  const [timeoutID, setTimeOutId] = useState<number>()
   const handleLogout = () => {
     logout()
     window.location.href = '/'
@@ -45,7 +45,7 @@ export const Header: React.FC<HeaderProps> = () => {
         {isAuthenticated && (
           <>
             <span className={styles.userGreeting}>
-              Привет, {user?.profileData.username || 'Пользователь'}{' '}
+              Привет, {user?.profileData?.username || 'Пользователь'}{' '}
             </span>
             <button onClick={handleLogout} className={styles.headerAction}>
               Выйти
@@ -54,7 +54,7 @@ export const Header: React.FC<HeaderProps> = () => {
         )}
         <button
           className={`${styles.headerAction} ${isAuthenticated ? styles.openDropdownBtn : ''}`}
-          onClick={(e) => {
+          onClick={() => {
             if (isAuthenticated) {
               setOpenDropdown(!openDropdown)
             } else {
@@ -91,19 +91,25 @@ export const Header: React.FC<HeaderProps> = () => {
         >
           <button
             className={styles.headerAction}
-            onClick={() => (window.location.href = `${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.PROFILE}`)}
+            onClick={() =>
+              (window.location.href = `${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.PROFILE}`)
+            }
           >
             Профиль
           </button>
           <button
             className={styles.headerAction}
-            onClick={() => (window.location.href = `${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.FINANCES}`)}
+            onClick={() =>
+              (window.location.href = `${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.FINANCES}`)
+            }
           >
             Финансы
           </button>
           <button
             className={styles.headerAction}
-            onClick={() => (window.location.href = `${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.SETTINGS}`)}
+            onClick={() =>
+              (window.location.href = `${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.SETTINGS}`)
+            }
           >
             Настройки
           </button>
