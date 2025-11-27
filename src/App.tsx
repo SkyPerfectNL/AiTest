@@ -1,4 +1,3 @@
-import { HelmetProvider } from 'react-helmet-async'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { AuthProvider, SidebarProvider } from '@contexts/'
 import { Layout, ProtectedRoute } from '@components/'
@@ -43,13 +42,11 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <HelmetProvider>
-      <AuthProvider>
-        <SidebarProvider>
-          <RouterProvider router={router} />
-        </SidebarProvider>
-      </AuthProvider>
-    </HelmetProvider>
+    <AuthProvider>
+      <SidebarProvider>
+        <RouterProvider router={router} />
+      </SidebarProvider>
+    </AuthProvider>
   )
 }
 
