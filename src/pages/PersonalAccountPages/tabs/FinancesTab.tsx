@@ -1,5 +1,4 @@
 import { useAuth } from '@contexts/'
-import { User } from '@types/'
 import type React from 'react'
 import stylesFinance from '../styles/FinanceTab.module.scss'
 import stylesGeneral from '../styles/Account.module.scss'

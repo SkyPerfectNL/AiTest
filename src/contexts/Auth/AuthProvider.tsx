@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { User, AuthModalType, AuthContextType } from '@types/'
+import { User, AuthModalType, AuthContextType } from '@interfaces/'
 import { AuthContext } from './AuthContext'
 
 interface mockUser extends User {
@@ -32,8 +32,8 @@ const mockUsers: mockUser[] = [
       subscription: 1,
     },
     settingsData: {
-      language: "ru",
-      theme: "light",
+      language: 'ru',
+      theme: 'light',
       name: true,
       email: false,
       phone: false,
@@ -41,7 +41,7 @@ const mockUsers: mockUser[] = [
       city: true,
       company: true,
       jobPosition: false,
-      teams: [true, false]
+      teams: [true, false],
     },
     projectData: {
       projects: [{ name: 'project1' }, { name: 'project1' }],
@@ -74,8 +74,8 @@ const mockUsers: mockUser[] = [
       subscription: 0,
     },
     settingsData: {
-      language: "ru",
-      theme: "light",
+      language: 'ru',
+      theme: 'light',
       name: true,
       email: false,
       phone: false,
@@ -83,7 +83,7 @@ const mockUsers: mockUser[] = [
       city: true,
       company: null,
       jobPosition: null,
-      teams: [true, false]
+      teams: [true, false],
     },
     projectData: {
       projects: [{ name: 'project4' }, { name: 'project3' }],
@@ -158,7 +158,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (type === 'phone') {
       if (code === '123456') {
         if (user) {
-          const updatedUser: User = { ...user}
+          const updatedUser: User = { ...user }
           user.profileData.phoneConfirmed = true
           setUser(updatedUser)
           localStorage.setItem('currentUser', JSON.stringify(updatedUser))
@@ -171,7 +171,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       if (code === '123456') {
         if (user) {
-          const updatedUser: User = { ...user}
+          const updatedUser: User = { ...user }
           updatedUser.profileData.emailConfirmed = true
           setUser(updatedUser)
           localStorage.setItem('currentUser', JSON.stringify(updatedUser))

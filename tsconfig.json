@@ -22,7 +22,8 @@
       "@pages/": ["./src/pages/"],
       "@utils/": ["./src/utils/"],
       "@hooks/": ["./src/hooks/"],
-      "@types/": ["./src/types/"]
+      "@interfaces/": ["./src/types/"],
+      "@constants/": ["./src/constants/"]
     },
     "types": ["vite/client"]
   },

@@ -1,5 +1,5 @@
 import { useAuth } from '@contexts/'
-import { ConfirmFormData, LoginFormData, RegisterFormData } from '@types/'
+import { ConfirmFormData, LoginFormData, RegisterFormData } from '@interfaces/'
 import React, { useState } from 'react'
 import { ConfirmForm, LoginForm, RegisterForm } from './Forms/'
 

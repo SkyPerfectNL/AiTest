@@ -3,7 +3,7 @@ import type React from 'react'
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import styles from './styles/Account.module.scss'
-import { PAGE_ENDPOINTS } from '../../constants'
+import { PAGE_ENDPOINTS } from '@constants/'
 
 export const PersonalAccountLayout: React.FC = () => {
   const tabs = [

@@ -1,7 +1,7 @@
 import React from 'react'
-import { LoginFormData, FormDataToRecord, PartialFormData } from '@types/'
+import { LoginFormData, FormDataToRecord, PartialFormData } from '@interfaces/'
 import { AuthForm } from './AuthForm'
-import styles from "../AuthModal.module.scss"
+import styles from '../AuthModal.module.scss'
 interface LoginFormProps {
   formData: LoginFormData
   error: string

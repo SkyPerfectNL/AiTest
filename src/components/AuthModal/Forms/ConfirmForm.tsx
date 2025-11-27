@@ -3,13 +3,13 @@ import {
   ConfirmFormData,
   FormDataToRecord,
   PartialFormData,
-} from '@types/'
+} from '@interfaces/'
 import { AuthForm } from './AuthForm'
-import styles from "../AuthModal.module.scss"
+import styles from '../AuthModal.module.scss'
 interface ConfirmFormProps {
   formData: ConfirmFormData
   error: string
-  confirmType: "phone" | "email"
+  confirmType: 'phone' | 'email'
   isLoading: boolean
   pendingValue: string
   onChange: (data: Partial<ConfirmFormData>) => void
@@ -40,11 +40,10 @@ export const ConfirmForm: React.FC<ConfirmFormProps> = ({
   ]
 
   const resendCode = () => {
-    if(confirmType == "phone") {
-      console.log("Resend sms")
-    }
-    else {
-      console.log("Reset email")
+    if (confirmType == 'phone') {
+      console.log('Resend sms')
+    } else {
+      console.log('Reset email')
     }
   }
 

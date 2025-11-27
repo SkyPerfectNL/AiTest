@@ -3,7 +3,7 @@ import { useSidebar, useAuth } from '@contexts/'
 import { MenuButton } from '@components/'
 import styles from './Header.module.scss'
 import { useState } from 'react'
-import { PAGE_ENDPOINTS } from '../../constants'
+import { PAGE_ENDPOINTS } from '@constants/'
 
 interface HeaderProps {
   actionText?: string

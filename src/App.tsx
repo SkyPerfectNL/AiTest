@@ -1,7 +1,7 @@
 import { Layout, ProtectedRoute } from '@components/'
 import { AuthProvider, SidebarProvider } from '@contexts/'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
-import { PAGE_ENDPOINTS } from './constants'
+import { PAGE_ENDPOINTS } from '@constants/'
 import {
   FinanceTab,
   HomeContainer,
