@@ -1,7 +1,4 @@
-import { User } from "./user"
-
 export interface AuthContextType {
-  user: User | null
   isAuthenticated: boolean
   authModal: AuthModalType
   pendingEmail: string
@@ -13,11 +10,10 @@ export interface AuthContextType {
     email: string,
     password: string
   ) => Promise<boolean>
-  confirmPending: (code: string, type: "phone" | "email") => Promise<boolean>
+  confirmPending: (code: string, type: 'phone' | 'email') => Promise<boolean>
   logout: () => void
   openAuthModal: (type: AuthModalType, value?: string) => void
   closeAuthModal: (type: AuthModalType) => void
-  updateUser: (user: User) => void
 }
 
 export interface LoginFormData {
@@ -42,4 +38,9 @@ export type FormDataToRecord<T> = {
 
 export type PartialFormData<T> = Partial<FormDataToRecord<T>>
 
-export type AuthModalType = 'login' | 'register' | 'confirmEmail' | 'confirmPhone' | null
+export type AuthModalType =
+  | 'login'
+  | 'register'
+  | 'confirmEmail'
+  | 'confirmPhone'
+  | null

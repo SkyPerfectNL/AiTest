@@ -1,215 +1,219 @@
-import React, { useState, useEffect } from 'react'
-import { User, AuthModalType, AuthContextType } from '@interfaces/'
+import React, { useEffect } from 'react'
+import { useAuthStore } from '@stores/'
+import { useUserStore } from '@stores/'
+import { authApi } from '@api'
 import { AuthContext } from './AuthContext'
-
-interface mockUser extends User {
-  password: string
-}
-
-const mockUsers: mockUser[] = [
-  {
-    id: '1',
-    profileData: {
-      status: 'active',
-      username: 'testuser',
-      firstName: 'name',
-      lastName: 'lastName',
-      fatherName: 'fatherName',
-      email: 'test@test.com',
-      phone: '+79217990312',
-      phoneConfirmed: true,
-      emailConfirmed: true,
-      country: 'Country1',
-      city: 'City1',
-      company: 'company1',
-      employeeCount: '11-30',
-      jobPosition: 'job1',
-      usePurpose: 'testCompany',
-      teams: [{ name: 'team1', role: 'role1' }],
-    },
-    financeData: {
-      balance: 123,
-      subscription: 1,
-    },
-    settingsData: {
-      language: 'ru',
-      theme: 'light',
-      name: true,
-      email: false,
-      phone: false,
-      country: true,
-      city: true,
-      company: true,
-      jobPosition: false,
-      teams: [true, false],
-    },
-    projectData: {
-      projects: [{ name: 'project1' }, { name: 'project1' }],
-    },
-    isAdmin: true,
-    password: 'password123',
-  },
-  {
-    id: '2',
-    profileData: {
-      status: 'active',
-      username: 'demo',
-      firstName: 'demo',
-      lastName: 'lastName',
-      fatherName: 'fatherName',
-      email: 'demo@demo.com',
-      phone: '+79217990312',
-      phoneConfirmed: false,
-      emailConfirmed: false,
-      country: 'Country1',
-      city: 'City1',
-      company: null,
-      employeeCount: null,
-      jobPosition: null,
-      usePurpose: 'personal',
-      teams: [{ name: 'team1', role: 'role1' }],
-    },
-    financeData: {
-      balance: 456,
-      subscription: 0,
-    },
-    settingsData: {
-      language: 'ru',
-      theme: 'light',
-      name: true,
-      email: false,
-      phone: false,
-      country: true,
-      city: true,
-      company: null,
-      jobPosition: null,
-      teams: [true, false],
-    },
-    projectData: {
-      projects: [{ name: 'project4' }, { name: 'project3' }],
-    },
-    isAdmin: false,
-    password: 'demo123',
-  },
-]
+import {
+  AuthModalType,
+  AuthContextType,
+  ApiError,
+  AuthError,
+  NetworkError,
+} from '@interfaces/'
+import { getTokenExpirationTime } from '@utils/'
+import { MOCK_MODE } from '@constants/'
+import { mockApiService } from '../../services/mockApiService'
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [authModal, setAuthModal] = useState<AuthModalType>(null)
-  const [pendingEmail, setPendingEmail] = useState('')
-  const [pendingPhone, setPendingPhone] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
+  const {
+    accessToken,
+    authModal,
+    pendingEmail,
+    pendingPhone,
+    isLoading,
+    setTokens,
+    setAuthModal,
+    setPendingEmail,
+    setPendingPhone,
+    setLoading,
+    logout: storeLogout,
+  } = useAuthStore()
+
+  const { setUser, clearUser } = useUserStore()
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('currentUser')
-    if (savedUser) {
-      setUser(JSON.parse(savedUser))
-    }
-    setIsLoading(false)
-  }, [])
+    if (accessToken) {
+      const expirationTime = getTokenExpirationTime(accessToken)
+      if (expirationTime) {
+        const timeUntilExpiration = expirationTime - Date.now()
 
-  const updateUser = (user: User) => {
-    setUser(user)
-    // console.log(user)
-    localStorage.setItem('currentUser', JSON.stringify(user))
-  }
+        if (timeUntilExpiration > 0) {
+          const timer = setTimeout(() => {
+            storeLogout()
+            clearUser()
+            console.log('Auto-logout due to token expiration')
+          }, timeUntilExpiration)
+
+          return () => clearTimeout(timer)
+        } else {
+          storeLogout()
+          clearUser()
+        }
+      }
+    }
+  }, [accessToken, storeLogout, clearUser])
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    const foundUser = mockUsers.find(
-      (u) => u.profileData.email === email && u.password === password
-    )
+    try {
+      setLoading(true)
 
-    if (foundUser) {
-      const userData: User = { ...foundUser }
+      let result
+      if (MOCK_MODE) {
+        result = await mockApiService.login({ email, password })
+      } else {
+        result = await authApi.login({ email, password })
+      }
 
+      const { user: userData, accessToken, refreshToken } = result
+
+      setTokens(accessToken, refreshToken)
       setUser(userData)
-      localStorage.setItem('currentUser', JSON.stringify(userData))
 
-      if (!foundUser.profileData.emailConfirmed) {
-        openAuthModal('confirmEmail', foundUser.profileData.email)
+      if (!userData.profileData.emailConfirmed) {
+        openAuthModal('confirmEmail', userData.profileData.email)
       } else {
         closeAuthModal('login')
       }
-      return true
-    }
 
-    return false
+      return true
+    } catch (error) {
+      handleAuthError(error)
+      return false
+    } finally {
+      setLoading(false)
+    }
   }
 
   const register = async (
     username: string,
-    email: string
+    email: string,
+    password: string
   ): Promise<boolean> => {
-    const userExists = mockUsers.some((u) => u.profileData.email === email)
-    if (userExists) {
-      return false
-    }
+    try {
+      setLoading(true)
 
-    openAuthModal('confirmEmail', email)
-    return true
+      let result
+      if (MOCK_MODE) {
+        result = await mockApiService.register({ username, email, password })
+      } else {
+        result = await authApi.register({ username, email, password })
+      }
+
+      const { user: userData, accessToken, refreshToken } = result
+
+      setTokens(accessToken, refreshToken)
+      setUser(userData)
+      openAuthModal('confirmEmail', email)
+      return true
+    } catch (error) {
+      handleAuthError(error)
+      return false
+    } finally {
+      setLoading(false)
+    }
   }
 
   const confirmPending = async (
     code: string,
     type: 'phone' | 'email'
   ): Promise<boolean> => {
-    if (type === 'phone') {
-      if (code === '123456') {
-        if (user) {
-          const updatedUser: User = { ...user }
-          user.profileData.phoneConfirmed = true
-          setUser(updatedUser)
-          localStorage.setItem('currentUser', JSON.stringify(updatedUser))
+    try {
+      setLoading(true)
+
+      let result
+      if (MOCK_MODE) {
+        if (type === 'email') {
+          result = await mockApiService.confirmEmail({
+            email: pendingEmail,
+            code,
+          })
+        } else {
+          result = await mockApiService.confirmPhone({
+            phone: pendingPhone,
+            code,
+          })
         }
-        closeAuthModal('confirmPhone')
+      } else {
+        if (type === 'email') {
+          result = await authApi.confirmEmail({
+            email: pendingEmail,
+            code,
+          })
+        } else {
+          result = await authApi.confirmPhone({
+            phone: pendingPhone,
+            code,
+          })
+        }
+      }
+
+      if (result.success) {
+        const { user } = useUserStore.getState()
+        if (user) {
+          const updatedUser = {
+            ...user,
+            profileData: {
+              ...user.profileData,
+              [`${type}Confirmed`]: true,
+            },
+          }
+          setUser(updatedUser)
+        }
+
+        closeAuthModal(type === 'email' ? 'confirmEmail' : 'confirmPhone')
         return true
       }
 
       return false
-    } else {
-      if (code === '123456') {
-        if (user) {
-          const updatedUser: User = { ...user }
-          updatedUser.profileData.emailConfirmed = true
-          setUser(updatedUser)
-          localStorage.setItem('currentUser', JSON.stringify(updatedUser))
-        }
-        closeAuthModal('confirmEmail')
-        return true
-      }
-
+    } catch (error) {
+      console.error('Confirmation failed:', error)
       return false
+    } finally {
+      setLoading(false)
     }
   }
 
-  const logout = () => {
-    setUser(null)
-    localStorage.removeItem('currentUser')
+  const handleAuthError = (error: unknown): void => {
+    console.error('Auth error:', error)
+
+    if (error instanceof AuthError) {
+      console.error('Authentication error:', error.message)
+    } else if (error instanceof NetworkError) {
+      console.error('Network error:', error.message)
+    } else if (error instanceof ApiError) {
+      console.error('API error:', error.message)
+    } else if (error instanceof Error) {
+      console.error('Mock API error:', error.message)
+    }
   }
 
-  const openAuthModal = (type: AuthModalType, value: string = '') => {
+  const logout = (): void => {
+    storeLogout()
+    clearUser()
+  }
+
+  const openAuthModal = (type: AuthModalType, value: string = ''): void => {
     setAuthModal(type)
-    if (type == 'confirmEmail') {
+    if (type === 'confirmEmail') {
       setPendingEmail(value)
-    } else if (type == 'confirmPhone') {
+    } else if (type === 'confirmPhone') {
       setPendingPhone(value)
     }
   }
 
-  const closeAuthModal = (type: AuthModalType) => {
+  const closeAuthModal = (type: AuthModalType): void => {
     setAuthModal(null)
-    if (type == 'confirmEmail') {
+    if (type === 'confirmEmail') {
       setPendingEmail('')
-    } else if (type == 'confirmPhone') {
+    } else if (type === 'confirmPhone') {
       setPendingPhone('')
     }
   }
 
   const value: AuthContextType = {
-    user,
-    isAuthenticated: !!user,
+    isAuthenticated: !!accessToken,
     authModal,
     pendingEmail,
     pendingPhone,
@@ -220,7 +224,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     logout,
     openAuthModal,
     closeAuthModal,
-    updateUser,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -19,11 +19,14 @@
       "@components/": ["./src/components/"],
       "@styles/": ["./src/styles/"],
       "@contexts/": ["./src/contexts/"],
+      "@constants/": ["./src/constants/"],
       "@pages/": ["./src/pages/"],
       "@utils/": ["./src/utils/"],
       "@hooks/": ["./src/hooks/"],
       "@interfaces/": ["./src/types/"],
-      "@constants/": ["./src/constants/"]
+      "@stores/": ["./src/stores/"],
+      "@services/": ["./src/services/"],
+      "@api": ["./src/api/"]
     },
     "types": ["vite/client"]
   },

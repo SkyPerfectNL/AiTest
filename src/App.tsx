@@ -1,5 +1,5 @@
-import { Layout, ProtectedRoute } from '@components/'
-import { AuthProvider, SidebarProvider } from '@contexts/'
+import { Layout, MockInfo, ProtectedRoute } from '@components/'
+import { AuthProvider, UserProvider, SidebarProvider } from '@contexts/'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { PAGE_ENDPOINTS } from '@constants/'
 import {
@@ -18,7 +18,6 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
-    // errorElement: <ErrorPage />,
     children: [
       {
         path: PAGE_ENDPOINTS.INDEX,
@@ -77,9 +76,12 @@ const router = createBrowserRouter([
 function App() {
   return (
     <AuthProvider>
-      <SidebarProvider>
-        <RouterProvider router={router} />
-      </SidebarProvider>
+      <UserProvider>
+        <SidebarProvider>
+          <MockInfo />
+          <RouterProvider router={router} />
+        </SidebarProvider>
+      </UserProvider>
     </AuthProvider>
   )
 }

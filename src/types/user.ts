@@ -18,10 +18,12 @@ export interface ProfileData {
   usePurpose: 'personal' | 'testPersonal' | 'testCompany' | 'testJob'
   teams: { name: string; role: string }[]
 }
+
 export interface FinanceData {
   balance: number
   subscription: 1 | 2 | 3 | 0
 }
+
 export interface SettingsData {
   theme: 'light' | 'dark'
   name: boolean
@@ -32,8 +34,9 @@ export interface SettingsData {
   company: boolean | null
   jobPosition: boolean | null
   teams: boolean[]
-  language: "ru" | "en"
+  language: 'ru' | 'en'
 }
+
 export interface ProjectData {
   projects: Project[]
 }
@@ -45,4 +48,19 @@ export interface User {
   financeData: FinanceData
   settingsData: SettingsData
   projectData: ProjectData
+}
+
+export interface UserContextType {
+  user: User | null
+  isLoading: boolean
+  error: string | null
+  refreshUser: () => Promise<void>
+  updateUserProfile: (
+    profileData: Partial<User['profileData']>
+  ) => Promise<void>
+  updateUserSettings: (
+    settingsData: Partial<User['settingsData']>
+  ) => Promise<void>
+  updateUserConfirmation: (type: 'email' | 'phone') => Promise<void> // Добавляем
+  clearError: () => void
 }
