@@ -3,7 +3,7 @@
   border-bottom: 1px solid #ccc;
   /* margin: 20px 0 0; */
   max-width: 100%;
-  margin:  0 auto;
+  margin: 0 auto;
   margin-top: 20px;
 }
 
@@ -22,10 +22,10 @@
 }
 
 .tab {
-  
-  &:hover, &:focus {
+  &:hover,
+  &:active {
     background-color: #f0f0f0;
-    color:#000;
+    color: #000;
     border-bottom-color: #000;
   }
 }

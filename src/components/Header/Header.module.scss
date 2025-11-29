@@ -1,4 +1,4 @@
-@use "/src/styles/_variables.scss" as vars;
+@use '/src/styles/_variables.scss' as vars;
 
 .header {
   display: flex;
@@ -69,7 +69,7 @@
     &:hover {
       background-color: #9d8229;
     }
-    &:focus {
+    &:active {
       box-shadow: inset 5px 5px 5px black;
     }
   }

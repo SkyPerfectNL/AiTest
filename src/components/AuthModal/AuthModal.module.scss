@@ -106,7 +106,7 @@
   box-sizing: border-box;
   transition: border-color 0.2s;
 
-  &:focus {
+  &:active {
     outline: none;
     border-color: #40655e;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
@@ -150,7 +150,7 @@
   transition: background-color 0.2s;
 
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
-  &:focus {
+  &:active {
     box-shadow: inset 5px 5px 5px black;
   }
 

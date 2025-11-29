@@ -1,4 +1,4 @@
-@use "@styles/_variables.scss" as vars;
+@use '@styles/_variables.scss' as vars;
 
 .tabs {
   & > button {
@@ -36,7 +36,7 @@
     background-color: #6c757d;
     cursor: not-allowed;
   }
-  &:focus {
+  &:active {
     box-shadow: inset 5px 5px 5px black;
   }
 }
