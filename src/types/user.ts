@@ -61,6 +61,6 @@ export interface UserContextType {
   updateUserSettings: (
     settingsData: Partial<User['settingsData']>
   ) => Promise<void>
-  updateUserConfirmation: (type: 'email' | 'phone') => Promise<void> // Добавляем
+  updateUserConfirmation: (type: 'email' | 'phone') => Promise<void>
   clearError: () => void
 }

@@ -27,7 +27,8 @@ export const IndexContainer: React.FC = () => {
             <br />
             • Email: test@test.com, Пароль: password123 (подтвержденный аккаунт)
             <br />
-            • Email: demo@demo.com, Пароль: demo123 (неподтвержденный аккаунт)
+            • Email: demo@demo.com, Пароль: password123 (неподтвержденный
+            аккаунт)
             <br />• Код подтверждения: 123456
           </p>
         </div>
