@@ -32,6 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   } = useAuthStore()
 
   const { setUser, clearUser } = useUserStore()
+  const { onConfirmAction, setOnConfirmAction } = useAuthStore()
 
   useEffect(() => {
     if (accessToken) {
@@ -68,12 +69,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       const { user: userData, accessToken, refreshToken } = result
 
-      setTokens(accessToken, refreshToken)
-      setUser(userData)
-
       if (!userData.profileData.emailConfirmed) {
+        setOnConfirmAction((type) => {
+          setTokens(accessToken, refreshToken)
+          setUser(userData)
+        })
         openAuthModal('confirmEmail', userData.profileData.email)
       } else {
+        setTokens(accessToken, refreshToken)
+        setUser(userData)
         closeAuthModal('login')
       }
 
@@ -103,8 +107,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       const { user: userData, accessToken, refreshToken } = result
 
-      setTokens(accessToken, refreshToken)
-      setUser(userData)
+      setOnConfirmAction((type) => {
+        setTokens(accessToken, refreshToken)
+        setUser(userData)
+      })
       openAuthModal('confirmEmail', email)
       return true
     } catch (error) {
@@ -150,19 +156,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
 
       if (result.success) {
-        const { user } = useUserStore.getState()
-        if (user) {
-          const updatedUser = {
-            ...user,
-            profileData: {
-              ...user.profileData,
-              [`${type}Confirmed`]: true,
-            },
-          }
-          setUser(updatedUser)
-        }
+        onConfirmAction(type)
 
-        closeAuthModal(type === 'email' ? 'confirmEmail' : 'confirmPhone')
         return true
       }
 

@@ -1,4 +1,4 @@
-import { useAuth } from '@contexts/'
+import { useAuth, useUser } from '@contexts/'
 import type React from 'react'
 import stylesFinance from '../styles/FinanceTab.module.scss'
 import stylesGeneral from '../styles/Account.module.scss'
@@ -13,7 +13,7 @@ const statusMap = {
 const [min, max] = [0, 9999999999]
 
 export const FinanceTab: React.FC = () => {
-  const { user } = useAuth()
+  const { user } = useUser()
   const [hidden, setHidden] = useState(true)
   const [balanceAddintion, setBalanceAddition] = useState(0)
   const [error, setError] = useState('')
@@ -26,6 +26,11 @@ export const FinanceTab: React.FC = () => {
     return true
     // вернуть false если неудачно
   }
+
+  // useEffect(() => {
+  //   console.log("sdfsdfsdg")
+  //   console.log(user)
+  // }, [])
 
   function handleOnChange(newVal: string) {
     if (newVal == '') {
@@ -47,8 +52,6 @@ export const FinanceTab: React.FC = () => {
       }
     }
   }
-
-  useEffect(() => console.log(balanceAddintion), [balanceAddintion])
 
   return (
     <div className={stylesGeneral.pageContainer}>

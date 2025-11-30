@@ -1,5 +1,5 @@
 import type React from 'react'
-import { useSidebar, useAuth } from '@contexts/'
+import { useSidebar, useAuth, useUser } from '@contexts/'
 import { MenuButton } from '@components/'
 import styles from './Header.module.scss'
 import { useState } from 'react'
@@ -12,7 +12,8 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = () => {
   const { toggleSidebar } = useSidebar()
-  const { user, isAuthenticated, logout, openAuthModal } = useAuth()
+  const {user } = useUser() 
+  const { isAuthenticated, logout, openAuthModal } = useAuth()
   const [openDropdown, setOpenDropdown] = useState(false)
   const [timeoutID, setTimeOutId] = useState<number>()
   const handleLogout = () => {

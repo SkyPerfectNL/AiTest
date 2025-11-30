@@ -1,4 +1,4 @@
-import { Project } from './project'
+import { Project, ProjectMinimal } from './project'
 
 export interface ProfileData {
   status: 'active' | 'blocked' | 'deleted'
@@ -16,12 +16,21 @@ export interface ProfileData {
   employeeCount: '<10' | '11-30' | '30-100' | '>100' | null
   jobPosition: string | null
   usePurpose: 'personal' | 'testPersonal' | 'testCompany' | 'testJob'
-  teams: { name: string; role: string }[]
+  teams: { id: number, name: string; role: 0 | 1 | 2 | 3 | 4 | 5 }[]
 }
 
 export interface FinanceData {
   balance: number
   subscription: 1 | 2 | 3 | 0
+}
+
+export const userRoleMap = {
+  1: "ИТ-Лидер",
+  2: "Администратор проекта",
+  3: "Аналитик",
+  4: "Тестировщик",
+  5: "Автомитизатор",
+  0: "Пользователь"
 }
 
 export interface SettingsData {
@@ -33,12 +42,8 @@ export interface SettingsData {
   city: boolean
   company: boolean | null
   jobPosition: boolean | null
-  teams: boolean[]
+  teams: {id: number, flag:boolean}[]
   language: 'ru' | 'en'
-}
-
-export interface ProjectData {
-  projects: Project[]
 }
 
 export interface User {
@@ -47,7 +52,7 @@ export interface User {
   profileData: ProfileData
   financeData: FinanceData
   settingsData: SettingsData
-  projectData: ProjectData
+  projectData: ProjectMinimal[]
 }
 
 export interface UserContextType {

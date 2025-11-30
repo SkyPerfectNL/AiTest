@@ -1,10 +1,11 @@
-import { useAuth } from '@contexts/'
-import { ProfileData } from '@interfaces/'
+import { useAuth, useUser } from '@contexts/'
+import { ProfileData, userRoleMap } from '@interfaces/'
 import type React from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import stylesProfile from '../styles/ProfileTab.module.scss'
 import stylesGeneral from '../styles/Account.module.scss'
 import { useEffect } from 'react'
+import { useAuthStore } from '@stores/'
 
 const statusMap = {
   active: 'Активен',
@@ -14,7 +15,9 @@ const statusMap = {
 }
 
 export const ProfileTab: React.FC = () => {
-  const { user, updateUser, openAuthModal } = useAuth()
+  const { openAuthModal } = useAuth()
+  const {user, updateUserProfile} = useUser()
+  const {setOnConfirmAction} = useAuthStore()
   const {
     control,
     handleSubmit,
@@ -44,6 +47,20 @@ export const ProfileTab: React.FC = () => {
 
   const handleSave = (data: ProfileData) => {
     if (user) {
+
+      if(user.profileData.phone !== phone) {
+        const res = confirm("Ваш телефон не подтвержден. При сохранении он не будет обновлен. Вы уверены, что хотите продолжить?")
+        if(!res){
+          return
+        }
+      }
+      if(user.profileData.email !== email) {
+        const res = confirm("Ваша почта не подтверждена. При сохранении она не будет обновлена. Вы уверены, что хотите продолжить?")
+        if(!res){
+          return
+        }
+      }
+
       if (!data.company) {
         data.employeeCount = null
         data.jobPosition = null
@@ -56,21 +73,31 @@ export const ProfileTab: React.FC = () => {
       if (user.profileData.phone !== data.phone) {
         data.phoneConfirmed = false
       }
-      user.profileData = data
-      console.log(user)
-      updateUser(user)
+      updateUserProfile(data)
     }
   }
 
   const handleConfirmEmail = () => {
     console.log('Confirm email')
+    setOnConfirmAction((type) => {
+      updateUserProfile({...user?.profileData, emailConfirmed: true})
+    })
     openAuthModal('confirmEmail', email)
   }
-
+  
   const handleConfirmPhone = () => {
+    setOnConfirmAction((type) => {
+      updateUserProfile({...user?.profileData, phoneConfirmed: true})
+    })
     console.log('Confirm phone')
     openAuthModal('confirmPhone', phone)
   }
+
+    useEffect(() => {
+      console.log("sdfsdfsdg")
+      console.log(user)
+    }, [user])
+    // useEffect(() => console.log("pg", phone, email), [phone, email])
 
   return (
     <div className={stylesGeneral.pageContainer}>
@@ -169,7 +196,7 @@ export const ProfileTab: React.FC = () => {
             <div className={stylesProfile.fieldGroup}>
               <label className={stylesProfile.label}>
                 Почта
-                {!user?.profileData.emailConfirmed && (
+                {user?.profileData.email !== email && (
                   <button
                     type="button"
                     onClick={handleConfirmEmail}
@@ -207,7 +234,7 @@ export const ProfileTab: React.FC = () => {
             <div className={stylesProfile.fieldGroup}>
               <label className={stylesProfile.label}>
                 Номер телефона
-                {!user?.profileData.phoneConfirmed && (
+                {user?.profileData.phone !== phone && (
                   <button
                     type="button"
                     onClick={handleConfirmPhone}
@@ -413,16 +440,16 @@ export const ProfileTab: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {user.profileData.teams.map((team, index) => (
-                    <tr key={index}>
+                  {user.profileData.teams.map((team) => (
+                    <tr key={team.id}>
                       <td>{team.name}</td>
-                      <td>{team.role}</td>
+                      <td> {team.role === 2 ? (<a href='/admin'>{userRoleMap[team.role]}</a>): userRoleMap[team.role]}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-              <p className={stylesProfile.noTeams}>У вас нет команд!</p>
+              <p className={stylesProfile.noTeams}>У вас нет команд! {user ? "true" : "false"}</p>
             )}
           </div>
           {user?.isAdmin && (

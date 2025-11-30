@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { ConfirmForm, LoginForm, RegisterForm } from './Forms/'
 
 import styles from './AuthModal.module.scss'
+import { useAuthStore } from '@stores/'
 
 export const AuthModal: React.FC = () => {
   const {
@@ -137,6 +138,9 @@ export const AuthModal: React.FC = () => {
       )
       if (!success) {
         setError('Неверный код подтверждения')
+      }
+      else {
+        closeAuthModal(authModal)
       }
     } catch {
       setError('Ошибка при подтверждении')
