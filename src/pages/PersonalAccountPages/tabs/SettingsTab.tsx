@@ -3,25 +3,50 @@ import { SettingsData } from '@interfaces/'
 import type React from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import stylesSettings from '../styles/SettingsTab.module.scss'
+import { useHeaderStore } from '@stores/'
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import stylesGeneral from '../styles/Account.module.scss'
 
 export const SettingsTab: React.FC = () => {
-  const { user, updateUserSettings } = useUser()
+  const { user, updateUserSettings, isLoading } = useUser()
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<SettingsData>({ defaultValues: user?.settingsData })
+  const { setHeaderContent } = useHeaderStore()
+
+  useEffect(
+    () =>
+      setHeaderContent(
+        <div>
+          <Link to="/">ЯМП&nbsp;</Link>
+          &mdash;&nbsp; {user?.profileData.username} &nbsp;&mdash;&nbsp; настройки
+        </div>
+      ),
+    [setHeaderContent]
+  )
 
   const handleSave = (data: SettingsData) => {
     if (user) {
       data.company = !!data.company
       data.jobPosition = !!data.jobPosition
-      updateUserSettings(data)
+      user.settingsData = data
+      console.log(user)
+      updateUserSettings(user)
     }
   }
 
   const hasCompany = user?.profileData.company !== null
+
+  if (isLoading) {
+    return (
+      <div className={stylesGeneral.pageContainer}>
+        <div>Загрузка профиля...</div>
+      </div>
+    )
+  }
 
   return (
     <div className={stylesGeneral.pageContainer}>

@@ -6,6 +6,7 @@ import {
   FinanceTab,
   HomeContainer,
   IndexContainer,
+  IndexPage,
   PersonalAccountLayout,
   ProfileTab,
   ProjectContainer,
@@ -13,20 +14,26 @@ import {
 } from './pages'
 
 import './index.css'
+import { useEffect } from 'react'
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: PAGE_ENDPOINTS.INDEX,
+    element: <IndexPage/>,
+  },
+  {
+    // path: '/',
+    path: PAGE_ENDPOINTS.OUTLET,
     element: <Layout />,
     children: [
-      {
-        path: PAGE_ENDPOINTS.INDEX,
-        element: (
-          <ProtectedRoute requireAuth={false}>
-            <IndexContainer />
-          </ProtectedRoute>
-        ),
-      },
+      // {
+      //   path: PAGE_ENDPOINTS.INDEX,
+      //   element: (
+      //     <ProtectedRoute requireAuth={false}>
+      //       <IndexContainer />
+      //     </ProtectedRoute>
+      //   ),
+      // },
       {
         path: PAGE_ENDPOINTS.HOME,
         element: (
@@ -74,6 +81,13 @@ const router = createBrowserRouter([
 ])
 
 function App() {
+  useEffect(() => {
+    console.log('Токен в localStorage:', localStorage.getItem('auth-storage'))
+    console.log(
+      'ID пользователя в localStorage:',
+      localStorage.getItem('mock_user_id')
+    )
+  }, [])
   return (
     <AuthProvider>
       <UserProvider>

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { AuthModalType } from '@interfaces/'
+import { isTokenExpired } from '@utils/'
 
 interface AuthState {
   accessToken: string | null
@@ -19,11 +20,12 @@ interface AuthState {
   logout: () => void
   onConfirmAction: (type: "phone" | "email") => void
   setOnConfirmAction: (callback: (type: "phone" | "email") => void) => void
+  validateToken: () => boolean
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       accessToken: null,
       refreshToken: null,
       isAuthenticated: false,
@@ -34,7 +36,11 @@ export const useAuthStore = create<AuthState>()(
       onConfirmAction: (type) => {},
 
       setTokens: (accessToken, refreshToken) =>
-        set({ accessToken, refreshToken, isAuthenticated: true }),
+        set({
+          accessToken,
+          refreshToken,
+          isAuthenticated: !isTokenExpired(accessToken),
+        }),
 
       setAuthModal: (authModal) => set({ authModal }),
 
@@ -55,6 +61,21 @@ export const useAuthStore = create<AuthState>()(
           pendingEmail: '',
           onConfirmAction: (type) => {},
         }),
+
+      validateToken: () => {
+        const { accessToken } = get()
+        if (!accessToken) return false
+
+        const isValid = !isTokenExpired(accessToken)
+        if (!isValid) {
+          set({
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+          })
+        }
+        return isValid
+      },
     }),
     {
       name: 'auth-storage',

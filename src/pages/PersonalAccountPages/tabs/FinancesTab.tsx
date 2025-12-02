@@ -3,6 +3,8 @@ import type React from 'react'
 import stylesFinance from '../styles/FinanceTab.module.scss'
 import stylesGeneral from '../styles/Account.module.scss'
 import { useEffect, useState } from 'react'
+import { useHeaderStore } from '@stores/'
+import { Link } from 'react-router-dom'
 
 const statusMap = {
   active: 'Активен',
@@ -13,11 +15,22 @@ const statusMap = {
 const [min, max] = [0, 9999999999]
 
 export const FinanceTab: React.FC = () => {
-  const { user } = useUser()
+  const { user, isLoading } = useUser()
   const [hidden, setHidden] = useState(true)
   const [balanceAddintion, setBalanceAddition] = useState(0)
   const [error, setError] = useState('')
+  const { setHeaderContent } = useHeaderStore()
 
+  useEffect(
+    () =>
+      setHeaderContent(
+        <div>
+          <Link to="/">ЯМП&nbsp;</Link>
+          &mdash;&nbsp; {user?.profileData.username} &nbsp;&mdash;&nbsp; финансы
+        </div>
+      ),
+    [setHeaderContent]
+  )
   const changeBalance = (val: number) => {
     console.log('change balance: +', val)
     if (user) {
@@ -51,6 +64,16 @@ export const FinanceTab: React.FC = () => {
         setBalanceAddition(Math.round(num * 100) / 100)
       }
     }
+  }
+
+  useEffect(() => console.log(balanceAddintion), [balanceAddintion])
+
+  if (isLoading) {
+    return (
+      <div className={stylesGeneral.pageContainer}>
+        <div>Загрузка профиля...</div>
+      </div>
+    )
   }
 
   return (
