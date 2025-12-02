@@ -20,7 +20,7 @@ export const mockUsers: User[] = [
       employeeCount: '11-30' as const,
       jobPosition: 'Тестировщик',
       usePurpose: 'testCompany' as const,
-      teams: [{ name: 'QA Team', role: 'Senior QA' }],
+      teams: [{ id: 3, name: 'QA Team', role: 2 }],
     },
     financeData: {
       balance: 12300,
@@ -35,16 +35,14 @@ export const mockUsers: User[] = [
       city: true,
       company: true,
       jobPosition: false,
-      teams: [true, false],
+      teams: [{id: 3, flag: true }],
       language: 'ru' as const,
     },
-    projectData: {
-      projects: [
-        { name: 'Мобильное приложение' },
-        { name: 'Веб-портал' },
-        { name: 'API система' },
+    projectData:  [
+        { id: 3, name: 'Мобильное приложение' },
+        { id: 4, name: 'Веб-портал' },
+        { id: 5, name: 'API система' },
       ],
-    },
     isAdmin: true,
   },
   {
@@ -66,7 +64,7 @@ export const mockUsers: User[] = [
       employeeCount: null,
       jobPosition: null,
       usePurpose: 'personal' as const,
-      teams: [{ name: 'Dev Team', role: 'Developer' }],
+      teams: [{ id: 1, name: 'Dev Team', role: 0 }],
     },
     financeData: {
       balance: 4560,
@@ -81,12 +79,10 @@ export const mockUsers: User[] = [
       city: true,
       company: null,
       jobPosition: null,
-      teams: [true, false],
+      teams: [{id: 1, flag: true}],
       language: 'ru' as const,
     },
-    projectData: {
-      projects: [{ name: 'Личный проект' }, { name: 'Тестовый стенд' }],
-    },
+    projectData: [{ id: 1, name: 'Личный проект' }, { id: 2, name: 'Тестовый стенд' }],
     isAdmin: false,
   },
 ]

@@ -1,11 +1,14 @@
 import { useAuth, useUser } from '@contexts/'
-import { ProfileData } from '@interfaces/'
+import { ProfileData, userRoleMap } from '@interfaces/'
 import type React from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useEffect } from 'react'
 
 import stylesProfile from '../styles/ProfileTab.module.scss'
 import stylesGeneral from '../styles/Account.module.scss'
+import { useAuthStore, useHeaderStore } from '@stores/'
+import { Link } from 'react-router-dom'
+import { PAGE_ENDPOINTS } from '@constants/'
 
 const statusMap = {
   active: 'Активен',
@@ -15,9 +18,9 @@ const statusMap = {
 }
 
 export const ProfileTab: React.FC = () => {
-  const { user, updateUserProfile, isLoading } = useUser()
-
   const { openAuthModal } = useAuth()
+  const { setOnConfirmAction } = useAuthStore()
+  const { user, updateUserProfile, isLoading } = useUser()
   const {
     control,
     handleSubmit,
@@ -25,6 +28,18 @@ export const ProfileTab: React.FC = () => {
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<ProfileData>({ defaultValues: user?.profileData })
+  const { setHeaderContent } = useHeaderStore()
+
+  useEffect(
+    () =>
+      setHeaderContent(
+        <div>
+          <Link to="/">ЯМП&nbsp;</Link>
+          &mdash;&nbsp; {user?.profileData.username} &nbsp;&mdash;&nbsp; профиль
+        </div>
+      ),
+    [setHeaderContent]
+  )
 
   const company = watch('company')
   const email = watch('email')
@@ -46,6 +61,23 @@ export const ProfileTab: React.FC = () => {
 
   const handleSave = (data: ProfileData) => {
     if (user) {
+      if (user.profileData.phone !== phone) {
+        const res = confirm(
+          'Ваш телефон не подтвержден. При сохранении он не будет обновлен. Вы уверены, что хотите продолжить?'
+        )
+        if (!res) {
+          return
+        }
+      }
+      if (user.profileData.email !== email) {
+        const res = confirm(
+          'Ваша почта не подтверждена. При сохранении она не будет обновлена. Вы уверены, что хотите продолжить?'
+        )
+        if (!res) {
+          return
+        }
+      }
+
       if (!data.company) {
         data.employeeCount = null
         data.jobPosition = null
@@ -66,14 +98,29 @@ export const ProfileTab: React.FC = () => {
 
   const handleConfirmEmail = () => {
     console.log('Confirm email')
+    setOnConfirmAction((type) => {
+      updateUserProfile({
+        profileData: { ...user?.profileData, emailConfirmed: true },
+      })
+    })
     openAuthModal('confirmEmail', email)
   }
 
   const handleConfirmPhone = () => {
+    setOnConfirmAction((type) => {
+      updateUserProfile({
+        profileData: { ...user?.profileData, phoneConfirmed: true },
+      })
+    })
     console.log('Confirm phone')
     openAuthModal('confirmPhone', phone)
   }
 
+  useEffect(() => {
+    console.log('sdfsdfsdg')
+    console.log(user)
+  }, [user])
+  // useEffect(() => console.log("pg", phone, email), [phone, email])
   if (isLoading) {
     return (
       <div className={stylesGeneral.pageContainer}>
@@ -191,7 +238,7 @@ export const ProfileTab: React.FC = () => {
             <div className={stylesProfile.fieldGroup}>
               <label className={stylesProfile.label}>
                 Почта
-                {!user?.profileData.emailConfirmed && (
+                {(!user?.profileData.emailConfirmed || user?.profileData.email !== email) && (
                   <button
                     type="button"
                     onClick={handleConfirmEmail}
@@ -229,7 +276,7 @@ export const ProfileTab: React.FC = () => {
             <div className={stylesProfile.fieldGroup}>
               <label className={stylesProfile.label}>
                 Номер телефона
-                {!user?.profileData.phoneConfirmed && (
+                {(!user?.profileData.phoneConfirmed || user?.profileData.phone !== phone) && (
                   <button
                     type="button"
                     onClick={handleConfirmPhone}
@@ -435,32 +482,27 @@ export const ProfileTab: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {user.profileData.teams.map((team, index) => (
-                    <tr key={index}>
+                  {user.profileData.teams.map((team) => (
+                    <tr key={team.id}>
                       <td>{team.name}</td>
-                      <td>{team.role}</td>
+                      <td>
+                        {' '}
+                        {team.role === 2 ? (
+                          <Link to={`${PAGE_ENDPOINTS.OUTLET}/${PAGE_ENDPOINTS.ADMIN}`}>{userRoleMap[team.role]}</Link>
+                        ) : (
+                          userRoleMap[team.role]
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-              <p className={stylesProfile.noTeams}>У вас нет команд!</p>
+              <p className={stylesProfile.noTeams}>
+                У вас нет команд! {user ? 'true' : 'false'}
+              </p>
             )}
           </div>
-          {user?.isAdmin && (
-            <div className={stylesProfile.actions}>
-              <button
-                type="button"
-                className={stylesGeneral.submitButton}
-                onClick={(e) => {
-                  console.log('to admin')
-                  e.currentTarget.blur()
-                }}
-              >
-                К панели администратора
-              </button>
-            </div>
-          )}
         </form>
       </div>
     </div>

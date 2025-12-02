@@ -18,6 +18,8 @@ interface AuthState {
   setPendingPhone: (phone: string) => void
   setLoading: (loading: boolean) => void
   logout: () => void
+  onConfirmAction: (type: "phone" | "email") => void
+  setOnConfirmAction: (callback: (type: "phone" | "email") => void) => void
   validateToken: () => boolean
 }
 
@@ -31,6 +33,7 @@ export const useAuthStore = create<AuthState>()(
       pendingEmail: '',
       pendingPhone: '',
       isLoading: false,
+      onConfirmAction: (type) => {},
 
       setTokens: (accessToken, refreshToken) =>
         set({
@@ -47,6 +50,8 @@ export const useAuthStore = create<AuthState>()(
 
       setLoading: (isLoading) => set({ isLoading }),
 
+      setOnConfirmAction: (onConfirmAction) => set({ onConfirmAction }),
+
       logout: () =>
         set({
           accessToken: null,
@@ -54,7 +59,7 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
           authModal: null,
           pendingEmail: '',
-          pendingPhone: '',
+          onConfirmAction: (type) => {},
         }),
 
       validateToken: () => {
