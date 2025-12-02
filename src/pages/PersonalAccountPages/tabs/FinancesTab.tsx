@@ -13,7 +13,7 @@ const statusMap = {
 const [min, max] = [0, 9999999999]
 
 export const FinanceTab: React.FC = () => {
-  const { user } = useUser()
+  const { user, isLoading } = useUser()
   const [hidden, setHidden] = useState(true)
   const [balanceAddintion, setBalanceAddition] = useState(0)
   const [error, setError] = useState('')
@@ -51,6 +51,16 @@ export const FinanceTab: React.FC = () => {
         setBalanceAddition(Math.round(num * 100) / 100)
       }
     }
+  }
+
+  useEffect(() => console.log(balanceAddintion), [balanceAddintion])
+
+  if (isLoading) {
+    return (
+      <div className={stylesGeneral.pageContainer}>
+        <div>Загрузка профиля...</div>
+      </div>
+    )
   }
 
   return (

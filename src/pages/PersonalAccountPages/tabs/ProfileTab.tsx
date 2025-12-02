@@ -2,6 +2,8 @@ import { useAuth, useUser } from '@contexts/'
 import { ProfileData, userRoleMap } from '@interfaces/'
 import type React from 'react'
 import { useForm, Controller } from 'react-hook-form'
+import { useEffect } from 'react'
+
 import stylesProfile from '../styles/ProfileTab.module.scss'
 import stylesGeneral from '../styles/Account.module.scss'
 import { useEffect } from 'react'
@@ -16,12 +18,11 @@ const statusMap = {
 
 export const ProfileTab: React.FC = () => {
   const { openAuthModal } = useAuth()
-  const {user, updateUserProfile} = useUser()
   const {setOnConfirmAction} = useAuthStore()
+  const { user, updateUserProfile, isLoading } = useUser()
   const {
     control,
     handleSubmit,
-    reset,
     watch,
     setValue,
     formState: { errors, isSubmitting },
@@ -73,7 +74,9 @@ export const ProfileTab: React.FC = () => {
       if (user.profileData.phone !== data.phone) {
         data.phoneConfirmed = false
       }
-      updateUserProfile(data)
+      user.profileData = data
+      console.log(user)
+      updateUserProfile(user)
     }
   }
 
@@ -98,6 +101,25 @@ export const ProfileTab: React.FC = () => {
       console.log(user)
     }, [user])
     // useEffect(() => console.log("pg", phone, email), [phone, email])
+  if (isLoading) {
+    return (
+      <div className={stylesGeneral.pageContainer}>
+        <div className={stylesProfile.profileTab}>
+          <div>Загрузка профиля...</div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className={stylesGeneral.pageContainer}>
+        <div className={stylesProfile.profileTab}>
+          <div>Пользователь не найден</div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={stylesGeneral.pageContainer}>

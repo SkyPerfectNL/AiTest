@@ -1,4 +1,5 @@
 import { Project, ProjectMinimal } from './project'
+import { UpdateProfileData, UpdateSettingsData } from '../api/users'
 
 export interface ProfileData {
   status: 'active' | 'blocked' | 'deleted'
@@ -48,6 +49,7 @@ export interface SettingsData {
 
 export interface User {
   id: string
+  uuid: string
   isAdmin: boolean
   profileData: ProfileData
   financeData: FinanceData
@@ -60,12 +62,8 @@ export interface UserContextType {
   isLoading: boolean
   error: string | null
   refreshUser: () => Promise<void>
-  updateUserProfile: (
-    profileData: Partial<User['profileData']>
-  ) => Promise<void>
-  updateUserSettings: (
-    settingsData: Partial<User['settingsData']>
-  ) => Promise<void>
+  updateUserProfile: (profileData: UpdateProfileData) => Promise<void>
+  updateUserSettings: (settingsData: UpdateSettingsData) => Promise<void>
   updateUserConfirmation: (type: 'email' | 'phone') => Promise<void>
   clearError: () => void
 }

@@ -6,7 +6,7 @@ import stylesSettings from '../styles/SettingsTab.module.scss'
 import stylesGeneral from '../styles/Account.module.scss'
 
 export const SettingsTab: React.FC = () => {
-  const { user, updateUserSettings } = useUser()
+  const { user, updateUserSettings, isLoading } = useUser()
   const {
     control,
     handleSubmit,
@@ -17,11 +17,21 @@ export const SettingsTab: React.FC = () => {
     if (user) {
       data.company = !!data.company
       data.jobPosition = !!data.jobPosition
-      updateUserSettings(data)
+      user.settingsData = data
+      console.log(user)
+      updateUserSettings(user)
     }
   }
 
   const hasCompany = user?.profileData.company !== null
+
+  if (isLoading) {
+    return (
+      <div className={stylesGeneral.pageContainer}>
+        <div>Загрузка профиля...</div>
+      </div>
+    )
+  }
 
   return (
     <div className={stylesGeneral.pageContainer}>
