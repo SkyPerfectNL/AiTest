@@ -14,11 +14,11 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = () => {
   const { toggleSidebar } = useSidebar()
-  const {user } = useUser() 
+  const { user } = useUser()
   const { isAuthenticated, logout, openAuthModal } = useAuth()
   const [openDropdown, setOpenDropdown] = useState(false)
   const [timeoutID, setTimeOutId] = useState<number>()
-  const {headerContent} = useHeaderStore()
+  const { headerContent } = useHeaderStore()
   const navigate = useNavigate()
 
   const handleLogout = () => {
@@ -31,9 +31,7 @@ export const Header: React.FC<HeaderProps> = () => {
       <div className={styles.headerLeft}>
         <MenuButton onClick={toggleSidebar} />
       </div>
-      <div className={styles.headerMid}>
-        {headerContent}
-      </div>
+      <div className={styles.headerMid}>{headerContent}</div>
       <div className={styles.headerRight}>
         {isAuthenticated && (
           <>
@@ -46,7 +44,7 @@ export const Header: React.FC<HeaderProps> = () => {
           </>
         )}
         <button
-          className={`${styles.headerAction} ${isAuthenticated ? styles.openDropdownBtn : ''}`}
+          className={`${styles.headerAction} ${styles.openDropdownBtn}`}
           onClick={() => {
             if (isAuthenticated) {
               setOpenDropdown(!openDropdown)
@@ -65,9 +63,7 @@ export const Header: React.FC<HeaderProps> = () => {
             )
           }}
         >
-          {isAuthenticated
-            ? `Личный кабинет ${openDropdown ? '▼' : '▶'}`
-            : 'Войти'}
+          {`Личный кабинет ${openDropdown ? '▼' : '▶'}`}
         </button>
         <div
           className={`${styles.dropdownDiv} ${openDropdown ? '' : styles.hidden}`}
@@ -85,7 +81,9 @@ export const Header: React.FC<HeaderProps> = () => {
           <button
             className={styles.headerAction}
             onClick={() =>
-              navigate(`${PAGE_ENDPOINTS.OUTLET}/${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.PROFILE}`)
+              navigate(
+                `${PAGE_ENDPOINTS.OUTLET}/${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.PROFILE}`
+              )
             }
           >
             Профиль
@@ -93,7 +91,9 @@ export const Header: React.FC<HeaderProps> = () => {
           <button
             className={styles.headerAction}
             onClick={() =>
-              navigate(`${PAGE_ENDPOINTS.OUTLET}/${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.FINANCES}`)
+              navigate(
+                `${PAGE_ENDPOINTS.OUTLET}/${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.FINANCES}`
+              )
             }
           >
             Финансы
@@ -101,7 +101,9 @@ export const Header: React.FC<HeaderProps> = () => {
           <button
             className={styles.headerAction}
             onClick={() =>
-              navigate(`${PAGE_ENDPOINTS.OUTLET}/${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.SETTINGS}`)
+              navigate(
+                `${PAGE_ENDPOINTS.OUTLET}/${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.SETTINGS}`
+              )
             }
           >
             Настройки

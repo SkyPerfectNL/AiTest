@@ -24,7 +24,7 @@ export const IndexContainer: React.FC = () => {
   )
   return (
     <>
-      <Pipeline />
+      {/* <Pipeline /> */}
       <div className={styles.pageContainer}>
         <div className={styles.pageUp}>
           <p>Регистрация</p>

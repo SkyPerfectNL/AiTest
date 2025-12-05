@@ -26,7 +26,7 @@
   }
 }
 
-.mainContent > *:not(:first-child) {
+.mainContent > * {
   display: flex;
   flex-direction: column;
   background-color: #253b37;

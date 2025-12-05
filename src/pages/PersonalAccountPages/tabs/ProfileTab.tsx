@@ -116,11 +116,6 @@ export const ProfileTab: React.FC = () => {
     openAuthModal('confirmPhone', phone)
   }
 
-  useEffect(() => {
-    console.log('sdfsdfsdg')
-    console.log(user)
-  }, [user])
-  // useEffect(() => console.log("pg", phone, email), [phone, email])
   if (isLoading) {
     return (
       <div className={stylesGeneral.pageContainer}>
