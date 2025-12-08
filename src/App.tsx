@@ -1,4 +1,4 @@
-import { Layout, MockInfo, ProtectedRoute } from '@components/'
+import { Layout, ProtectedRoute } from '@components/'
 import { AuthProvider, UserProvider, SidebarProvider } from '@contexts/'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { PAGE_ENDPOINTS } from '@constants/'
@@ -14,12 +14,11 @@ import {
 } from './pages'
 
 import './index.css'
-import { useEffect } from 'react'
 
 const router = createBrowserRouter([
   {
     path: PAGE_ENDPOINTS.INDEX,
-    element: <IndexPage/>,
+    element: <IndexPage />,
   },
   {
     // path: '/',
@@ -51,7 +50,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: PAGE_ENDPOINTS.PROJECT+'/new',
+        path: PAGE_ENDPOINTS.PROJECT + '/new',
         element: (
           <ProtectedRoute>
             <NewProjectContainer />
@@ -89,13 +88,6 @@ const router = createBrowserRouter([
 ])
 
 function App() {
-  useEffect(() => {
-    console.log('Токен в localStorage:', localStorage.getItem('auth-storage'))
-    console.log(
-      'ID пользователя в localStorage:',
-      localStorage.getItem('mock_user_id')
-    )
-  }, [])
   return (
     <AuthProvider>
       <UserProvider>
