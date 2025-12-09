@@ -37,10 +37,11 @@ export const IndexHeader = ({
   const [showCarousel, setShowCarousel] = useState(false)
   const navLinksRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const width = window.innerWidth
 
   useEffect(() => {
     const checkLayout = () => {
+      const width = window.innerWidth
+
       if (width >= 900 && width <= 1650) {
         setShowCarousel(true)
       } else {
