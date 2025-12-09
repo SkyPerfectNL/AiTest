@@ -67,9 +67,9 @@ export const ProjectContainer: React.FC = () => {
 
   return (
     <div className={styles.pageContainer}>
+      <ProjectStats stats={project.stats} />
       <ProjectOverview project={project} />
       <ProjectUsers users={project.users} />
-      <ProjectStats stats={project.stats} />
       <RecentTestPlan runs={project.recentTestPlanRuns} />
     </div>
   )
