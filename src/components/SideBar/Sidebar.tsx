@@ -42,6 +42,8 @@ export const Sidebar: React.FC = () => {
     const checkSidebar = () => {
           setTimeout(() => {
       if (sidebarRef.current) {
+        // console.log(sidebarRef.current.clientWidth)
+        // console.log(window.innerWidth)
         setSidebarWidth(sidebarRef.current.clientWidth)
       }
     }, 500)
@@ -102,7 +104,7 @@ export const Sidebar: React.FC = () => {
           className={styles.sidebarButton}
           style={{
             opacity:
-              sidebarRef.current && sidebarWidth / window.innerWidth > 0.9
+              sidebarRef.current && (sidebarWidth+80) / window.innerWidth > 0.9
                 ? 1
                 : 0,
           }}
