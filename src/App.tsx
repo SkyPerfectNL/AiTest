@@ -4,6 +4,7 @@ import {
   UserProvider,
   SidebarProvider,
   ProjectProvider,
+  TestCaseProvider,
 } from '@contexts/'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { PAGE_ENDPOINTS } from '@constants/'
@@ -16,6 +17,7 @@ import {
   ProfileTab,
   ProjectContainer,
   SettingsTab,
+  ViewProfileTab,
 } from './pages'
 
 import './index.css'
@@ -27,6 +29,7 @@ import {
   ProjectTestCases,
   ProjectTestPlan,
   ProjectTestPlanRuns,
+  RedactTestCase,
 } from './pages/ProjectPages/components/ProjectSubPages'
 
 const router = createBrowserRouter([
@@ -36,100 +39,64 @@ const router = createBrowserRouter([
   },
   {
     path: PAGE_ENDPOINTS.OUTLET,
-    element: <Layout />,
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: PAGE_ENDPOINTS.HOME,
-        element: (
-          <ProtectedRoute>
-            <HomeContainer />
-          </ProtectedRoute>
-        ),
+        element: <HomeContainer />,
       },
       {
         path: PAGE_ENDPOINTS.PROJECT,
         children: [
           {
             path: 'new',
-            element: (
-              <ProtectedRoute>
-                <NewProjectContainer />
-              </ProtectedRoute>
-            ),
+            element: <NewProjectContainer />,
           },
           {
             path: `${PAGE_ENDPOINTS.PROJECT_ID}`,
-            element: (
-              <ProtectedRoute>
-                <ProjectContainer />
-              </ProtectedRoute>
-            ),
+            element: <ProjectContainer />,
           },
           {
             path: `${PAGE_ENDPOINTS.PROJECT_ID}/${PAGE_ENDPOINTS.PROJECT_PARTS.TEST_CASE}`,
-            element: (
-              <ProtectedRoute>
-                <ProjectTestCases />
-              </ProtectedRoute>
-            ),
+            element: <ProjectTestCases />,
+          },
+          {
+            path: `${PAGE_ENDPOINTS.PROJECT_ID}/${PAGE_ENDPOINTS.PROJECT_PARTS.TEST_CASE}/${PAGE_ENDPOINTS.TEST_CASE_ID}`,
+            element: <RedactTestCase />,
           },
           {
             path: `${PAGE_ENDPOINTS.PROJECT_ID}/${PAGE_ENDPOINTS.PROJECT_PARTS.TEST_PLAN}`,
-            element: (
-              <ProtectedRoute>
-                <ProjectTestPlan />
-              </ProtectedRoute>
-            ),
+            element: <ProjectTestPlan />,
           },
           {
             path: `${PAGE_ENDPOINTS.PROJECT_ID}/${PAGE_ENDPOINTS.PROJECT_PARTS.SCRIPT}`,
-            element: (
-              <ProtectedRoute>
-                <ProjectScripts />
-              </ProtectedRoute>
-            ),
+            element: <ProjectScripts />,
           },
           {
             path: `${PAGE_ENDPOINTS.PROJECT_ID}/${PAGE_ENDPOINTS.PROJECT_PARTS.AUTO_TEST}`,
-            element: (
-              <ProtectedRoute>
-                <ProjectAutoTesting />
-              </ProtectedRoute>
-            ),
+            element: <ProjectAutoTesting />,
           },
           {
             path: `${PAGE_ENDPOINTS.PROJECT_ID}/${PAGE_ENDPOINTS.PROJECT_PARTS.REPORTS}`,
-            element: (
-              <ProtectedRoute>
-                <ProjectReports />
-              </ProtectedRoute>
-            ),
+            element: <ProjectReports />,
           },
           {
             path: `${PAGE_ENDPOINTS.PROJECT_ID}/${PAGE_ENDPOINTS.PROJECT_PARTS.SETTINGS}`,
-            element: (
-              <ProtectedRoute>
-                <ProjectSettings />
-              </ProtectedRoute>
-            ),
+            element: <ProjectSettings />,
           },
           {
             path: `${PAGE_ENDPOINTS.PROJECT_ID}/${PAGE_ENDPOINTS.PROJECT_PARTS.TEST_PLAN_RUNS}`,
-            element: (
-              <ProtectedRoute>
-                <ProjectTestPlanRuns />
-              </ProtectedRoute>
-            ),
+            element: <ProjectTestPlanRuns />,
           },
         ],
       },
       {
         path: PAGE_ENDPOINTS.ACCOUNT.INDEX,
-        element: (
-          <ProtectedRoute>
-            <PersonalAccountLayout />
-          </ProtectedRoute>
-        ),
+        element: <PersonalAccountLayout />,
         children: [
           {
             path: PAGE_ENDPOINTS.ACCOUNT.PROFILE,
@@ -146,6 +113,10 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: `${PAGE_ENDPOINTS.ACCOUNT.INDEX}/${PAGE_ENDPOINTS.ACCOUNT.VIEW_ACCOUNT}`,
+        element: <ViewProfileTab />,
+      },
+      {
         path: '*',
         element: <Navigate to={PAGE_ENDPOINTS.INDEX} replace />,
       },
@@ -159,7 +130,9 @@ function App() {
       <UserProvider>
         <ProjectProvider>
           <SidebarProvider>
-            <RouterProvider router={router} />
+            <TestCaseProvider>
+              <RouterProvider router={router} />
+            </TestCaseProvider>
           </SidebarProvider>
         </ProjectProvider>
       </UserProvider>
