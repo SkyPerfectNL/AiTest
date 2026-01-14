@@ -1,0 +1,306 @@
+@use "@styles/_variables.scss" as vars;
+
+.glassWrapper {
+  padding: 0 5px;
+  display: flex;
+  width: 90vw;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  // padding-bottom: 20px;
+  transition:
+    opacity 0.3s ease-in-out,
+    backdrop-filter 1s ease-in-out;
+  border-radius: 100px;
+  background-color: linear-gradient(120deg, #000, rgba($color: #ffffff, $alpha: 0.05));
+  // background-color: rgba($color: #ffffff, $alpha: 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  // inset -10px -10px 20px rgba($color: #ffffff, $alpha: 0.1);
+  // border: 2px solid rgba($color: #ffffff, $alpha: 0.1);
+  // backdrop-filter: blur(1px);
+
+  &.hide {
+    opacity: 0;
+  }
+
+  &.scrolled {
+    opacity: 1;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 50px;
+    width: 90vw;
+    backdrop-filter: blur(10px);
+  }
+
+    @media (max-width: 800px) {
+      width: 100%;
+    }
+}
+
+.indexHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+
+  // margin-top: 40px;
+  color: vars.$darkColor;
+  background: transparent;
+  // position: sticky;
+  // top: 20px;
+
+  .indexLogo {
+    padding-left: 20px;
+    width: 250px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .longreadNavLinks {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: vars.$lightColor !important;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+
+    // max-width: 70vw;
+    // background-color: rgba($color: #000000, $alpha: 0.3);
+    // overflow-x: scroll;
+
+    & > * {
+      margin: 0 20px;
+      color: vars.$lightColor;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: opacity 0.3s ease;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .indexLogin {
+    padding-right: 20px;
+    // margin-left: calc(28.8vw - 368.8px);
+
+    // использовать это когда будет нормальная картинка на фоне
+    // margin-right: 15vw;
+    // margin-left: 50px;
+
+    .indexLoginBtn {
+      padding: 10px;
+      font-size: 14px;
+      color: vars.$darkBlueColor;
+      border: 2px solid vars.$darkBlueColor;
+      cursor: pointer;
+
+      // использовать это когда будет нормальная картинка на фоне
+      // border: 2px solid vars.$mainGrayBlueColor;
+      // color: vars.$mainGrayBlueColor;
+
+      background-color: transparent;
+      border-radius: 0 100px 100px 0;
+      width: 200px;
+      text-align: left;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+      }
+    }
+  }
+
+  .navContainer {
+    flex: 1;
+    max-width: 65vw;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .carouselWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .swiperContainer {
+    // width: 100%;
+    padding: 8px 0;
+    max-width: 50vw;
+    margin: auto 10px;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .swiperSlide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease-in-out;
+      border-bottom: 2px solid transparent;
+      // padding: 0 10px;
+      a {
+        text-align: center;
+        color: vars.$lightColor !important;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      &.currentPart {
+
+        border-color: white;
+        // padding-bottom: 5px !important;
+
+        a {
+          // text-decoration: underline;
+          font-weight: 700;
+          transform: translateY(-5px);
+        }
+      }
+    }
+
+    & > div {
+      align-items: center;
+    }
+  }
+
+  .navButtonPrev,
+  .navButtonNext {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    z-index: 10;
+
+    &.hiddenBtn {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  .navButtonPrev:hover,
+  .navButtonNext:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 1600px) {
+    padding: 5px 0;
+    gap: 15px;
+
+    .indexLogo {
+      width: 130px;
+      order: 1;
+    }
+
+    .navContainer {
+      order: 2;
+      width: 40%;
+      max-width: 50vw;
+    }
+
+    .swiperSlide {
+      a {
+        font-size: 12px !important;
+      }
+    }
+
+    .indexLogin {
+      order: 3;
+
+      // использовать это когда будет нормальная картинка на фоне
+      // margin-right: 15vw;
+      // margin-left: 50px;
+
+      .indexLoginBtn {
+        padding: 8px;
+        // padding-left: 10px;
+        font-size: 12px;
+        width: 160px;
+      }
+    }
+
+    .navButtonPrev,
+    .navButtonNext {
+      width: 28px;
+      height: 28px;
+    }
+  }
+  @media (max-width: 800px) {
+    .indexLogo {
+      width: 50px;
+      order: 1;
+      padding-left: 10px;
+    }
+
+    .navContainer {
+      order: 2;
+      width: 100%;
+      max-width: 37vw;
+    }
+
+    .swiperContainer {
+      margin: auto 0;
+    }
+
+    .swiperSlide {
+      a {
+        font-size: 8px !important;
+      }
+    }
+
+    .indexLogin {
+      order: 3;
+
+      // использовать это когда будет нормальная картинка на фоне
+      // margin-right: 15vw;
+      // margin-left: 50px;
+
+      .indexLoginBtn {
+        // padding-left: 10px;
+        padding: 5px;
+        font-size: 8px;
+        width: 110px;
+      }
+    }
+
+    .navButtonPrev,
+    .navButtonNext {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.hidden {
+  display: none !important;
+}

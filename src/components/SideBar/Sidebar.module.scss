@@ -1,0 +1,213 @@
+@use "/src/styles/animations.scss";
+@use "/src/styles/_variables.scss" as vars;
+@use "/src/styles/fonts.scss";
+
+.sidebar {
+  position: sticky;
+  z-index: 10;
+  top: calc(40px + 40px); //отсутуп + кнопка
+  width: 40px;
+  height: calc(80% - 60px);
+  padding: 20px 0;
+  background: #fff;
+  pointer-events: none;
+  transition: width 0.3s ease-in-out;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    width 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+  font-family: "Bounded";
+
+  * {
+    font-family: inherit;
+  }
+  // z-index: 100;
+  // border: 1px vars.$darkColor solid;
+
+  &.open {
+    width: 20vw;
+    opacity: 1;
+    pointer-events: all;
+    // @media (max-width: 1450px) {
+    //   width: 20%;
+    //   position: absolute;
+    //   display: flex;
+    //   animation: slideIn 0.3s ease-in-out;
+    // }
+
+    @media (max-width: 768px) {
+      width: calc(100vw - 40px);
+      height: 100vh;
+      position: fixed;
+      top: 20px;
+
+      & > nav {
+        max-width: 85%;
+      }
+    }
+  }
+}
+
+
+.sidebarButton {
+  position: absolute;
+  top: 0;
+  right: 5px;
+}
+
+.sidebarMenu {
+  height: 100%;
+  padding-left: 10px;
+  width: 100%;
+  transition: opacity 0.4s ease;
+}
+
+.menuList {
+  display: flex;
+  min-width: 100%;
+  flex-direction: column;
+
+  padding: 0;
+  gap: 17px;
+}
+
+.menuItem {
+  list-style: none;
+  // overflow: hidden;
+  transition: all 0.4s ease;
+  white-space: inherit;
+  width: 90%;
+  margin: 0 auto;
+  cursor: pointer;
+
+  // border: 2px vars.$darkColor solid;
+
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      transition-delay: 0.05s * $i + 0.1s;
+    }
+  }
+  .menuLink {
+    text-decoration: none;
+    font-size: 20px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    max-width: 80%;
+    color: lightgrey;
+
+    span {
+      transition: all 0.3s ease;
+      border-bottom: 2px solid transparent;
+    }
+
+    @media (max-width: 1200px) {
+      padding: 9px 10px;
+      font-size: 16px;
+      gap: 10px;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  &.selected {
+    list-style: square;
+    & > div > .menuLink {
+      color: black;
+    }
+  }
+
+  &.liOpen {
+    list-style: none;
+    & > div > .menuLink {
+      color: black;
+    }
+    & > div > a > span {
+      padding-bottom: 5px;
+      border-bottom: 2px solid lightgray;
+    }
+  }
+
+  &::marker {
+    font-size: 25px;
+  }
+
+  @media (min-width: 1750px) {
+    white-space: nowrap;
+  }
+}
+
+.animateOpen,
+.submenu {
+  @for $i from 1 through 10 {
+    > *:nth-child(#{$i}) {
+      // animation: appearLi 1s ease-in-out 0.05s * $i ;
+      animation: openLi 0.5s + 0.1s * $i;
+    }
+  }
+}
+
+.submenu {
+  padding: 10px 0;
+  margin: 20px 0;
+}
+
+.sidebarOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0);
+  // z-index: 99;
+  pointer-events: none;
+  transition: background-color 0.3s ease;
+
+  &.active {
+    display: block;
+    background-color: rgba(0, 0, 0, 0.5);
+    pointer-events: all;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+.closeSidebarMobile {
+  display: none;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  font-size: 90px;
+  cursor: pointer;
+  // z-index: 101;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+
+  @media (max-width: 768px) {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+
+    text .sidebar.open & {
+      opacity: 1;
+      transform: scale(1);
+      transition: all 0.3s ease 0.2s;
+    }
+
+    &:hover {
+      transform: rotate(90deg) scale(1.1);
+    }
+  }
+}
